@@ -70,6 +70,7 @@ graph TD
 
 ### Core Capabilities
 - Analysis of 2,471 molecular features across tissues
+- Comprehensive validation framework (permutation + bootstrap + cross-validation)
 - Advanced network topology analysis
 - Bayesian network validation framework
 - Comprehensive temporal dynamics assessment
@@ -244,51 +245,64 @@ Our metabolomics data analysis pipeline consists of four major phases, with comp
 
 ## Detailed Data Preprocessing Workflow
 ```mermaid
-   graph TD
-    %% Major Steps with darker shades
-    A([Raw Data]) --> B[Keep columns with ≥3 reps]
-    B --> C[Visualise missing values]
-    C --> D[Test for MCAR<br>Little's MCAR test]
-    D --> E[Test for MAR<br>Logistic Regression]
-    E --> F{Impute missing data}
-    F --> |R|G1[Random Forest, PMM]
-    F --> |Python|G2[kNN, Median, SVD, GPR, EM]
-    G1 & G2 --> H[Evaluate imputation methods]
-    H --> H1[EMD]
-    H --> H2[Hellinger Distance]
-    H --> H3[Calculate richness, Shannon entropy,<br>Simpson's diversity index, & sparsity]
-    H --> H4[Visualisations: Q-Q, ECDF, KDE plots]
-    H1 & H2 & H3 & H4 --> I[Select best method:<br>Random Forest]
-    I --> J{Outlier detection}
-    J --> K[Methods: Z-Score, IQR, Isolation Forest,<br>Elliptic Envelope, Mahalanobis, Robust PCA]
-    K --> L[Evaluate outlier detection methods]
-    L --> L1[PCA and t-SNE visualisations]
-    L --> L2[Plots of 30 most impacted variables]
-    L --> L3[Number of outliers per method]
-    L1 & L2 & L3 --> M[Select method: Isolation Forest]
-    M --> N[Remove outliers and<br>impute with Random Forest]
-    N --> O{Data Transformation}
-    O --> P[Methods: Log, Square Root, Box-Cox,<br>Yeo-Johnson, asinh, glog, Anscombe]
-    P --> Q[Evaluate transformations]
-    Q --> Q1[Metrics: CV, MA-transform,<br>RSD, rMAD]
-    Q --> Q2[Normality tests:<br>Shapiro-Wilk, Anderson-Darling]
-    Q --> Q3[Visualise: Density plots]
-    Q1 & Q2 & Q3 --> R{Variable Selection}
-    R --> S[Exclude variables with rMAD > 30%]
-    S --> T([End: Clean Data])
 
-    %% Styling major steps (dark green)
-    style A fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
-    style F fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
-    style J fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
-    style O fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
-    style R fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
+graph TD
+    A["Clean Dataset<br/>2,471 features"] --> B("PLS-DA Feature Selection<br/>VIP scores > 1")
+    B --> C("High-Confidence Features<br/>964 selected")
+    
+    C --> D{"Network Analysis Strategy"}
+    
+    D --> E
+    D --> F
+    D --> G
 
-    %% Styling endpoint (lightest green)
-    style T fill:#f1f8f1,stroke:#2e7d32,stroke-width:2px
+    subgraph AnalysisLayers ["Network Analysis Layers"]
+        E["LAYER 1: Correlation Networks<br/>Spearman |r| > 0.7, FDR < 0.05<br/>Purpose: Establish metabolite co-regulation patterns"]
+        F["LAYER 2: Topology Analysis<br/>Density, Transitivity, Modularity, Hubs<br/>Purpose: Quantify tissue-specific architecture"]
+        G["LAYER 3: Bayesian Networks<br/>Hill-climbing DAG, Bootstrap n=5,000<br/>Purpose: Infer directional dependencies"]
+    end
+    
+    E --> H("Integration and Interpretation")
+    F --> H
+    G --> H
+    
+    H --> I{"VALIDATION FRAMEWORK"}
+    
+    I --> I1
+    I --> I2
+    I --> I3
+
+    subgraph ValidationAspects ["Statistical Robustness"]
+        I1["Permutation Testing<br/>n=1,000-10,000 iterations<br/>Purpose: Assess non-random organization"]
+        I2["Bootstrap Validation<br/>n=5,000 resamples<br/>Purpose: Confidence interval estimation"]
+        I3["Cross-Validation<br/>Temporal stability + Module preservation<br/>Purpose: Assess dynamic network integrity"]
+    end
+    
+    I1 --> J(("Complementary Insights<br/>Each layer provides distinct non-redundant information<br/>P < 0.001 statistical significance"))
+    I2 --> J
+    I3 --> J
+
+    %% Styling nodes with different shades of green
+    style A fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style B fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style C fill:#81c784,stroke:#2e7d32,stroke-width:2px
+    style D fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
+    
+    style E fill:#4caf50,stroke:#2e7d32,stroke-width:2px
+    style F fill:#66bb6a,stroke:#2e7d32,stroke-width:2px
+    style G fill:#81c784,stroke:#2e7d32,stroke-width:2px
+    
+    style H fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style I fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
+    
+    style I1 fill:#4caf50,stroke:#2e7d32,stroke-width:2px
+    style I2 fill:#66bb6a,stroke:#2e7d32,stroke-width:2px
+    style I3 fill:#81c784,stroke:#2e7d32,stroke-width:2px
+    
+    style J fill:#1b5e20,stroke:#1b5e20,stroke-width:2px,color:#fff
 
     %% Styling edges
-    linkStyle default stroke:#2e7d32,stroke-width:1px
+    linkStyle default stroke:#2e7d32,stroke-width:2px
 ```
 
 
@@ -298,12 +312,11 @@ Our metabolomics data analysis pipeline consists of four major phases, with comp
 
 
 
-### 2️⃣ Network Construction
-Building on the clean dataset, we constructed:
-- Spearman correlation networks (|r| > 0.7)
-- Tissue-specific topology analysis
-- Module detection using Louvain algorithm
-- Hub identification and analysis
+### 2️⃣ Multi-Layer Network Analysis
+Our three-layer analytical framework addresses distinct biological questions:
+- **Layer 1**: Spearman correlation networks (|r| > 0.7, FDR < 0.05) - metabolite co-regulation
+- **Layer 2**: Topology analysis (density, transitivity, modularity) - architectural principles  
+- **Layer 3**: Bayesian networks (Hill-climbing DAG) - directional dependencies
 
 ### 3️⃣ Temporal Analysis
 Tracking network dynamics through:
@@ -312,13 +325,13 @@ Tracking network dynamics through:
 - Module preservation analysis
 - Pathway-level temporal patterns
 
-### 4️⃣ Validation Framework
-Ensuring reliability through:
-- Bootstrap validation (n=5,000)
-- Permutation testing
-- Bayesian network validation
-- Multiple null model comparisons
-
+### 4️⃣ Statistical Validation Framework
+Multi-tier validation ensuring robustness:
+- **Permutation Testing**: n=1,000-10,000 iterations (optimized by analysis type)
+- **Bootstrap Validation**: n=5,000 resamples for confidence intervals
+- **Cross-Validation**: Temporal stability and module preservation
+- **Significance Threshold**: P < 0.001 across all analyses
+  
 ## 🔍 Quality Metrics
 - Initial features: 4,255 (negative mode), 3,199 (positive mode)
 - Final clean dataset: 2,471 molecular features
