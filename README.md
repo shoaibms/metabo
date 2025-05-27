@@ -14,7 +14,7 @@ Key findings:
 ### Workflow Overview
 ```mermaid
 graph TD
-    A["Clean Dataset<br/>2,471 features"] --> B("PLS-DA Feature Selection<br/>VIP scores > 1")
+    A["Clean Dataset<br/>2471 features"] --> B("PLS-DA Feature Selection<br/>VIP scores > 1")
     B --> C("High-Confidence Features<br/>964 selected")
     
     C --> D{"Network Analysis Strategy"}
@@ -24,9 +24,9 @@ graph TD
     D --> G
 
     subgraph AnalysisLayers ["Network Analysis Layers"]
-        E["LAYER 1: Correlation Networks<br/>Spearman |r| > 0.7, FDR < 0.05<br/>Purpose: Establish metabolite co-regulation patterns"]
-        F["LAYER 2: Topology Analysis<br/>Density, Transitivity, Modularity, Hubs<br/>Purpose: Quantify tissue-specific architecture"]
-        G["LAYER 3: Bayesian Networks<br/>Hill-climbing DAG, Bootstrap n=5,000<br/>Purpose: Infer directional dependencies"]
+        E["LAYER 1: Correlation Networks<br/>Spearman |r| > 0.7, FDR < 0.05<br/>Purpose: Establish initial metabolite associations"]
+        F["LAYER 2: Topology Analysis<br/>Density, Transitivity, Modularity, Hubs<br/>Purpose: Quantify network architecture"]
+        G["LAYER 3: Bayesian Networks<br/>Structure Learning Hill-Climbing DAG<br/>Purpose: Infer potential dependencies and validate non-randomness"]
     end
     
     E --> H("Integration and Interpretation")
@@ -39,15 +39,17 @@ graph TD
     I --> I2
     I --> I3
 
-    subgraph ValidationAspects ["Statistical Robustness"]
-        I1["Permutation Testing<br/>n=1,000-10,000 iterations<br/>Purpose: Assess non-random organization"]
-        I2["Bootstrap Validation<br/>n=5,000 resamples<br/>Purpose: Confidence interval estimation"]
-        I3["Cross-Validation<br/>Temporal stability + Module preservation<br/>Purpose: Assess dynamic network integrity"]
+    subgraph ValidationAspects ["Validation Aspects"]
+        I1["Statistical Robustness<br/>Permutation Testing n=5000<br/>Purpose: Assess significance vs random chance"]
+        I2["Temporal Stability<br/>Cross-time point consistency<br/>Purpose: Evaluate dynamic network integrity"]
+        I3["Biological Significance<br/>Pathway Enrichment and Known Interactions<br/>Purpose: Link network features to function"]
     end
     
-    I1 --> J(("Complementary Insights<br/>Each layer provides distinct non-redundant information<br/>P < 0.001 statistical significance"))
+    I1 --> J(("Complementary Insights<br/>Each layer provides distinct non-redundant information"))
     I2 --> J
     I3 --> J
+    
+    J --> K["INTEGRATION RATIONALE<br/>Spearman alone = association without direction<br/>Topology alone = structure without relationships<br/>Bayesian alone = causality without architecture<br/>Combined = Complete network characterization"]
 
     style A fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     style B fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
@@ -66,6 +68,7 @@ graph TD
     style I3 fill:#81c784,stroke:#2e7d32,stroke-width:2px
     
     style J fill:#1b5e20,stroke:#1b5e20,stroke-width:2px,color:#fff
+    style K fill:#0d4f3c,stroke:#1b5e20,stroke-width:3px,color:#fff
 ```
 
 ### Core Capabilities
