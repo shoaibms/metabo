@@ -249,63 +249,74 @@ Our metabolomics data analysis pipeline consists of four major phases, with comp
 ## Detailed Data Preprocessing Workflow
 ```mermaid
 
-graph TD
-    A["Clean Dataset<br/>2,471 features"] --> B("PLS-DA Feature Selection<br/>VIP scores > 1")
-    B --> C("High-Confidence Features<br/>964 selected")
+flowchart TD
+    A["Start: Raw Data"] --> B["Keep columns with at least 3 replicates"]
+    B --> C["Visualize missing values"]
+    C --> D["Test for MCAR<br>Little's MCAR test"]
+    D -->|"Not MCAR"| E["Test for MAR<br>Logistic Regression"]
+    E -->|"MAR or MCAR"| F["Impute missing data"]
     
-    C --> D{"Network Analysis Strategy"}
+    F --> G1["R: Random Forest, PMM"]
+    F --> G2["Python: kNN, Median, SVD, GPR, EM"]
     
-    D --> E
-    D --> F
-    D --> G
-
-    subgraph AnalysisLayers ["Network Analysis Layers"]
-        E["LAYER 1: Correlation Networks<br/>Spearman |r| > 0.7, FDR < 0.05<br/>Purpose: Establish metabolite co-regulation patterns"]
-        F["LAYER 2: Topology Analysis<br/>Density, Transitivity, Modularity, Hubs<br/>Purpose: Quantify tissue-specific architecture"]
-        G["LAYER 3: Bayesian Networks<br/>Hill-climbing DAG, Bootstrap n=5,000<br/>Purpose: Infer directional dependencies"]
-    end
+    G1 --> H["Evaluate imputation methods"]
+    G2 --> H
     
-    E --> H("Integration and Interpretation")
-    F --> H
-    G --> H
+    H --> I1["EMD"]
+    H --> I2["Hellinger Distance"]
+    H --> I3["Calculated richness, Shannon entropy,<br>Simpson's diversity index, & sparsity"]
+    H --> I4["Visualizations: Q-Q, ECDF, KDE plots"]
     
-    H --> I{"VALIDATION FRAMEWORK"}
-    
-    I --> I1
-    I --> I2
-    I --> I3
-
-    subgraph ValidationAspects ["Statistical Robustness"]
-        I1["Permutation Testing<br/>n=1,000-10,000 iterations<br/>Purpose: Assess non-random organization"]
-        I2["Bootstrap Validation<br/>n=5,000 resamples<br/>Purpose: Confidence interval estimation"]
-        I3["Cross-Validation<br/>Temporal stability + Module preservation<br/>Purpose: Assess dynamic network integrity"]
-    end
-    
-    I1 --> J(("Complementary Insights<br/>Each layer provides distinct non-redundant information<br/>P < 0.001 statistical significance"))
+    I1 --> J["Select best method:<br>Random Forest"]
     I2 --> J
     I3 --> J
+    I4 --> J
+    
+    J --> K["Outlier detection"]
+    
+    K --> L["Methods: Z-Score, IQR, Isolation Forest,<br>Elliptic Envelope, Mahalanobis, Robust PCA"]
+    
+    L --> M["Evaluate outlier detection methods"]
+    
+    M --> N1["PCA and t-SNE visualizations"]
+    M --> N2["Plots of 30 most impacted variables"]
+    M --> N3["Number of outliers per method"]
+    
+    N1 --> O["Select method: Isolation Forest"]
+    N2 --> O
+    N3 --> O
+    
+    O --> P["Remove outliers and<br>impute with Random Forest"]
+    
+    P --> Q["Data Transformation"]
+    
+    Q --> R["Methods: Log, Square Root, Box-Cox,<br>Yeo-Johnson, asinh, glog, Anscombe"]
+    
+    R --> S["Evaluate transformations"]
+    
+    S --> T1["Metrics: CV, MA-transform,<br>rSD, rMAD"]
+    S --> T2["Normality tests:<br>Shapiro-Wilk, Anderson-Darling"]
+    S --> T3["Visualize: Density plots"]
+    
+    T1 --> U["Variable Selection"]
+    T2 --> U
+    T3 --> U
+    
+    U --> V["Exclude variables with rMAD > 30%"]
+    
+    V --> W["End: Clean Data"]
 
-    %% Styling nodes with different shades of green
-    style A fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style B fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
-    style C fill:#81c784,stroke:#2e7d32,stroke-width:2px
-    style D fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
+    %% Style definitions - different shades of green based on hierarchy
+    classDef mainDecision fill:#5d9b7e,stroke:#000,stroke-width:1.5px,shape:diamond,color:black,font-size:16px
+    classDef process fill:#a8e6cf,stroke:#000,stroke-width:1px,color:black,font-size:14px
+    classDef evaluateProcess fill:#97d1bc,stroke:#000,stroke-width:1px,color:black,font-size:14px
+    classDef methodProcess fill:#c3eadc,stroke:#000,stroke-width:1px,color:black,font-size:14px
     
-    style E fill:#4caf50,stroke:#2e7d32,stroke-width:2px
-    style F fill:#66bb6a,stroke:#2e7d32,stroke-width:2px
-    style G fill:#81c784,stroke:#2e7d32,stroke-width:2px
-    
-    style H fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
-    style I fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
-    
-    style I1 fill:#4caf50,stroke:#2e7d32,stroke-width:2px
-    style I2 fill:#66bb6a,stroke:#2e7d32,stroke-width:2px
-    style I3 fill:#81c784,stroke:#2e7d32,stroke-width:2px
-    
-    style J fill:#1b5e20,stroke:#1b5e20,stroke-width:2px,color:#fff
-
-    %% Styling edges
-    linkStyle default stroke:#2e7d32,stroke-width:2px
+    %% Apply styles
+    class A,F,K,Q,U mainDecision
+    class B,C,D,E,J,O,P,V,W process
+    class H,M,S evaluateProcess
+    class G1,G2,I1,I2,I3,I4,L,N1,N2,N3,R,T1,T2,T3 methodProcess
 ```
 
 
