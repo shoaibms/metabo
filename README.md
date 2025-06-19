@@ -49,7 +49,7 @@ graph TD
     I2 --> J
     I3 --> J
     
-    J --> K["INTEGRATION RATIONALE<br/>Spearman alone = association without direction<br/>Topology alone = structure without relationships<br/>Bayesian alone = causality without architecture<br/>Combined = Complete network characterization"]
+    J --> K["INTEGRATION RATIONALE<br/>Spearman alone = association without direction<br/>Topology alone = structure without relationships<br/>Bayesian alone = causality without architecture<br/>Combined = Complete network characterisation"]
 
     style A fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     style B fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
@@ -182,7 +182,7 @@ graph TD
   - igraph (community detection)
   - bnlearn (Bayesian networks)
 
-- **Visualization**:
+- **Visualisation**:
   - Matplotlib/Seaborn
   - ggplot2
   - Plotly (interactive plots)
@@ -239,7 +239,7 @@ Common issues and solutions:
 |----------|--------|--------|---------|
 | Network Density | 0.354 | 0.192 | Higher leaf density enables rapid stress response |
 | Transitivity | 0.740-0.804 | 0.686-0.714 | Better leaf network coordination |
-| Modularity | 0.097-0.162 | 0.213-0.288 | Root networks more compartmentalized |
+| Modularity | 0.097-0.162 | 0.213-0.288 | Root networks more compartmentalised |
 | Components | 6 | 18-21 | Roots show more independent modules |
 
 
@@ -251,7 +251,7 @@ Our metabolomics data analysis pipeline consists of four major phases, with comp
 
 flowchart TD
     A["Start: Raw Data"] --> B["Keep columns with at least 3 replicates"]
-    B --> C["Visualize missing values"]
+    B --> C["Visualise missing values"]
     C --> D["Test for MCAR<br>Little's MCAR test"]
     D -->|"Not MCAR"| E["Test for MAR<br>Logistic Regression"]
     E -->|"MAR or MCAR"| F["Impute missing data"]
@@ -265,7 +265,7 @@ flowchart TD
     H --> I1["EMD"]
     H --> I2["Hellinger Distance"]
     H --> I3["Calculated richness, Shannon entropy,<br>Simpson's diversity index, & sparsity"]
-    H --> I4["Visualizations: Q-Q, ECDF, KDE plots"]
+    H --> I4["Visualisations: Q-Q, ECDF, KDE plots"]
     
     I1 --> J["Select best method:<br>Random Forest"]
     I2 --> J
@@ -278,7 +278,7 @@ flowchart TD
     
     L --> M["Evaluate outlier detection methods"]
     
-    M --> N1["PCA and t-SNE visualizations"]
+    M --> N1["PCA and t-SNE visualisations"]
     M --> N2["Plots of 30 most impacted variables"]
     M --> N3["Number of outliers per method"]
     
@@ -296,7 +296,7 @@ flowchart TD
     
     S --> T1["Metrics: CV, MA-transform,<br>rSD, rMAD"]
     S --> T2["Normality tests:<br>Shapiro-Wilk, Anderson-Darling"]
-    S --> T3["Visualize: Density plots"]
+    S --> T3["Visualise: Density plots"]
     
     T1 --> U["Variable Selection"]
     T2 --> U
@@ -341,7 +341,7 @@ Tracking network dynamics through:
 
 ### 4️⃣ Statistical Validation Framework
 Multi-tier validation ensuring robustness:
-- **Permutation Testing**: n=1,000-10,000 iterations (optimized by analysis type)
+- **Permutation Testing**: n=1,000-10,000 iterations (optimised by analysis type)
 - **Bootstrap Validation**: n=5,000 resamples for confidence intervals
 - **Cross-Validation**: Temporal stability and module preservation
 - **Significance Threshold**: P < 0.001 across all analyses
