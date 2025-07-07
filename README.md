@@ -3,18 +3,20 @@
 *Uncovering the architectural principles of drought tolerance through integrated metabolomic-network analysis*
 
 ## 🎯 Project Overview
-This repository contains the analytical pipeline used to investigate how wheat plants adapt to drought stress through tissue-specific metabolic networks. Our study reveals that drought-tolerant wheat varieties maintain distinct molecular organisations in leaves versus roots - leaves show highly integrated networks optimised for rapid photosynthetic responses, while roots display modular networks suited for localised environmental adaptation. These architectural differences help explain how some wheat varieties better withstand drought conditions.
+This repository contains the analytical pipeline used to investigate how wheat plants adapt to drought stress through tissue-specific metabolic networks. Our study reveals that drought-tolerant wheat varieties maintain distinct molecular organisations in leaves versus roots - leaves show highly integrated networks optimised for rapid photosynthetic responses, whilst roots display modular networks suited for localised environmental adaptation. These architectural differences help explain how some wheat varieties better withstand drought conditions.
 
-Key findings:
-- Identified fundamental differences in how leaves and roots organise their molecular responses to drought
-- Discovered that drought-tolerant wheat has ~40% denser leaf networks compared to roots
-- Found that leaf-root coordination changes over time as drought stress continues
-- Validated findings using rigorous statistical approaches
+### Key Discoveries
+Using well-characterised contrasting wheat genotypes **G1 (Gladius, drought-tolerant)** and **G2 (DAS5_003811, drought-susceptible)**, we identified:
+
+- **Fundamental tissue-specific network asymmetry**: Leaves maintain ~40% denser networks (0.354 vs 0.192) with elevated transitivity, whilst roots deploy fragmented, modular architectures
+- **Strategic temporal decoupling**: Initial strong cross-tissue coordination (r ≈ 0.546) transitions to strategic independence (r ≈ 0.350) under prolonged stress
+- **Biphasic adaptation strategy**: Coordinated initial responses followed by tissue-specific specialisation, unique to drought-tolerant genotypes
+- **Rigorous statistical validation**: All findings validated through comprehensive Bayesian network analysis (P < 0.001) and permutation testing
 
 ### Workflow Overview
 ```mermaid
 graph TD
-    A["Clean Dataset<br/>2471 features"] --> B("PLS-DA Feature Selection<br/>VIP scores > 1")
+    A["Clean Dataset<br/>2,471 features"] --> B("PLS-DA Feature Selection<br/>VIP scores > 1")
     B --> C("High-Confidence Features<br/>964 selected")
     
     C --> D{"Network Analysis Strategy"}
@@ -40,9 +42,9 @@ graph TD
     I --> I3
 
     subgraph ValidationAspects ["Validation Aspects"]
-        I1["Statistical Robustness<br/>Permutation Testing n=5000<br/>Purpose: Assess significance vs random chance"]
-        I2["Temporal Stability<br/>Cross-time point consistency<br/>Purpose: Evaluate dynamic network integrity"]
-        I3["Biological Significance<br/>Pathway Enrichment and Known Interactions<br/>Purpose: Link network features to function"]
+        I1["Statistical Robustness<br/>Permutation Testing n=5,000<br/>Bayesian validation P < 0.001"]
+        I2["Temporal Stability<br/>Cross-time point consistency<br/>Module preservation analysis"]
+        I3["Biological Significance<br/>Pathway Enrichment and Known Interactions<br/>Cross-genotype validation"]
     end
     
     I1 --> J(("Complementary Insights<br/>Each layer provides distinct non-redundant information"))
@@ -72,14 +74,15 @@ graph TD
 ```
 
 ### Core Capabilities
-- Analysis of 2,471 molecular features across tissues
-- Comprehensive validation framework (permutation + bootstrap + cross-validation)
-- Advanced network topology analysis
-- Bayesian network validation framework
-- Comprehensive temporal dynamics assessment
+- Analysis of 2,471 molecular features across tissues and genotypes
+- PLS-DA feature selection (VIP > 1) identifying 964 high-confidence features
+- Comprehensive validation framework (permutation + bootstrap + Bayesian analysis)
+- Advanced network topology analysis with hub distribution assessment
+- Temporal dynamics evaluation with strategic decoupling quantification
+- Multi-genotype comparative analysis framework
 
 ## 🔑 Keywords
-`metabolomics` `network-analysis` `drought-tolerance` `wheat` `systems-biology` `temporal-dynamics` `tissue-specific-metabolism` `LC-MS` `bioinformatics` `plant-science` `osmotic-stress` `metabolic-networks`
+`metabolomics` `network-analysis` `drought-tolerance` `wheat` `systems-biology` `temporal-dynamics` `tissue-specific-metabolism` `LC-MS` `bioinformatics` `plant-science` `osmotic-stress` `metabolic-networks` `Bayesian-networks`
 
 ## 🏗️ System Architecture
 
@@ -119,7 +122,7 @@ graph TD
  │   │   ├── spearman_network.py      # Spearman correlation network
  │   │   ├── network_decay.py         # Network decay analysis
  │   │   ├── network_summary.py       # Network summary
- │   │   ├── baysian_network.R        # baysian network
+ │   │   ├── baysian_network.R        # Bayesian network analysis
  │   │   ├── tissue_analysis.R        # Tissue-specific analysis
  │   │   └── tissue_summary.R         # Tissue analysis summary
  │   │
@@ -153,108 +156,76 @@ graph TD
  ├── requirements.txt                  # Dependencies
  ├── environment.yaml                  # Configuration 
  └── README.md                         # Project overview
-
-
 ```
 
 ## 📊 Key Findings
 
-| Network Property | Leaves | Roots |
-|-----------------|--------|--------|
-| Network Density | 0.354 | 0.192 |
-| Transitivity | 0.740-0.804 | 0.686-0.714 |
-| Modularity | 0.097-0.162 | 0.213-0.288 |
-| Components | 6 | 18-21 |
+### Network Architecture Comparison
+| Network Property | Leaves (G1) | Roots (G1) | Biological Significance |
+|-----------------|-------------|------------|------------------------|
+| **Network Density** | 0.354 | 0.192 | Higher leaf density enables rapid stress response coordination |
+| **Transitivity** | 0.740-0.804 | 0.686-0.714 | Better leaf network clustering for photosynthetic adaptation |
+| **Modularity** | 0.097-0.162 | 0.213-0.288 | Root networks more compartmentalised for localised responses |
+| **Components** | 6 | 18-21 | Roots show more independent functional modules |
+| **Hub Connectivity** | 872 connections | 767 connections | Concentrated leaf hubs vs distributed root organisation |
 
+### Temporal Dynamics Discovery
+| Phase | Cross-tissue Correlation | Adaptation Strategy |
+|-------|-------------------------|-------------------|
+| **Initial Response** | r ≈ 0.546 | Coordinated whole-plant adjustment |
+| **Prolonged Stress** | r ≈ 0.350 | Strategic tissue-specific specialisation |
+| **G2 (Susceptible)** | r ≈ 0.236-0.288 | Weak, unstable coordination |
 
-
+### Statistical Validation Results
+- **Bayesian Network Analysis**: P < 0.001 (non-random organisation)
+- **Permutation Testing**: 5,000 iterations confirming significance
+- **Effect Sizes**: Leaves = 25.87, Roots = 18.75
+- **Hub Analysis**: Kruskal-Wallis H = 702.44, P = 6.20 × 10⁻¹⁵²
 
 ## 🚀 Technical Stack
 
 ### Core Analysis Pipeline
 - **Data Processing**: 
   - Pandas/NumPy (data manipulation)
-  - scikit-learn (machine learning)
+  - scikit-learn (PLS-DA, machine learning)
   - RDKit (chemical analysis)
   
 - **Network Analysis**:
-  - NetworkX (network construction)
-  - igraph (community detection)
-  - bnlearn (Bayesian networks)
+  - NetworkX (network construction and metrics)
+  - igraph (community detection and modularity)
+  - bnlearn (Bayesian network structure learning)
+
+- **Statistical Validation**:
+  - Permutation testing frameworks
+  - Bootstrap resampling (n=5,000)
+  - Cross-validation protocols
 
 - **Visualisation**:
-  - Matplotlib/Seaborn
-  - ggplot2
-  - Plotly (interactive plots)
+  - Matplotlib/Seaborn (static plots)
+  - ggplot2 (publication-quality figures)
+  - Plotly (interactive 3D networks)
 
 ## 🛠️ Installation & Setup
 
-
 ### Quick Start
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/shoaibms/metabo-net.git
-   cd metabo-net
-   ```
-
-2. **Setup Python Environment**
-   ```bash
-   # Create and activate environment
-   conda env create -f environment.yaml
-   conda activate my_environment
-   
-   # Install additional requirements
-   pip install -r requirements.txt
-   ```
-
-3. **Setup R Environment**
-   ```bash
-   # Create and activate R environment
-   conda env create -f environment_r.yaml
-   conda activate r_env
-   
-   # Install R packages
-   Rscript -e "source('requirements_r.txt')"
-   ```
-
-### Verify Installation
+**Clone Repository**
 ```bash
-# Test Python setup
-python src/1_data_preprocessing/feature_filter.py --test
-
-# Test R setup
-Rscript src/2_analysis/tissue_analysis.R --test
+git clone https://github.com/shoaibms/metabo-net.git
+cd metabo-net
 ```
-
-### Troubleshooting
-Common issues and solutions:
-- **Python package conflicts**: `conda env update -f environment.yaml`
-- **R package installation fails**: `conda install -c conda-forge r-essentials`
-- **Missing dependencies**: Check both `requirements.txt` and `requirements_r.txt`
-
-## 📊 Key Network Properties
-
-| Property | Leaves | Roots | Impact |
-|----------|--------|--------|---------|
-| Network Density | 0.354 | 0.192 | Higher leaf density enables rapid stress response |
-| Transitivity | 0.740-0.804 | 0.686-0.714 | Better leaf network coordination |
-| Modularity | 0.097-0.162 | 0.213-0.288 | Root networks more compartmentalised |
-| Components | 6 | 18-21 | Roots show more independent modules |
-
 
 # 📈 Analysis Pipeline
 Our metabolomics data analysis pipeline consists of four major phases, with comprehensive preprocessing steps to ensure data quality and reliability.
 
 ## Detailed Data Preprocessing Workflow
 ```mermaid
-
 flowchart TD
-    A["Start: Raw Data"] --> B["Keep columns with at least 3 replicates"]
-    B --> C["Visualise missing values"]
-    C --> D["Test for MCAR<br>Little's MCAR test"]
-    D -->|"Not MCAR"| E["Test for MAR<br>Logistic Regression"]
-    E -->|"MAR or MCAR"| F["Impute missing data"]
+    A["Start: Raw Data<br/>4,255 + 3,199 features"] --> B["Keep columns with at least 3 replicates"]
+    B --> C["Visualise missing values<br/>Assess missingness patterns"]
+    C --> D["Test for MCAR<br/>Little's MCAR test"]
+    D -->|"Not MCAR (P = 1.0)"| E["Test for MAR<br/>Logistic Regression"]
+    E -->|"MAR confirmed"| F["Impute missing data"]
     
     F --> G1["R: Random Forest, PMM"]
     F --> G2["Python: kNN, Median, SVD, GPR, EM"]
@@ -262,98 +233,128 @@ flowchart TD
     G1 --> H["Evaluate imputation methods"]
     G2 --> H
     
-    H --> I1["EMD"]
+    H --> I1["EMD (Earth Mover's Distance)"]
     H --> I2["Hellinger Distance"]
-    H --> I3["Calculated richness, Shannon entropy,<br>Simpson's diversity index, & sparsity"]
+    H --> I3["Calculate richness, Shannon entropy,<br/>Simpson's diversity index, & sparsity"]
     H --> I4["Visualisations: Q-Q, ECDF, KDE plots"]
     
-    I1 --> J["Select best method:<br>Random Forest"]
+    I1 --> J["Select best method:<br/>Random Forest<br/>(Higher richness: 168 vs 156.9)"]
     I2 --> J
     I3 --> J
     I4 --> J
     
     J --> K["Outlier detection"]
     
-    K --> L["Methods: Z-Score, IQR, Isolation Forest,<br>Elliptic Envelope, Mahalanobis, Robust PCA"]
+    K --> L["Methods: Z-Score, IQR, Isolation Forest,<br/>Elliptic Envelope, Mahalanobis, Robust PCA"]
     
     L --> M["Evaluate outlier detection methods"]
     
     M --> N1["PCA and t-SNE visualisations"]
     M --> N2["Plots of 30 most impacted variables"]
-    M --> N3["Number of outliers per method"]
+    M --> N3["Contamination threshold optimisation"]
     
-    N1 --> O["Select method: Isolation Forest"]
+    N1 --> O["Select method: Isolation Forest<br/>(Highest precision)"]
     N2 --> O
     N3 --> O
     
-    O --> P["Remove outliers and<br>impute with Random Forest"]
+    O --> P["Remove outliers and<br/>impute with Random Forest"]
     
     P --> Q["Data Transformation"]
     
-    Q --> R["Methods: Log, Square Root, Box-Cox,<br>Yeo-Johnson, asinh, glog, Anscombe"]
+    Q --> R["Methods: Log, Square Root, Box-Cox,<br/>Yeo-Johnson, asinh, glog, Anscombe"]
     
     R --> S["Evaluate transformations"]
     
-    S --> T1["Metrics: CV, MA-transform,<br>rSD, rMAD"]
-    S --> T2["Normality tests:<br>Shapiro-Wilk, Anderson-Darling"]
-    S --> T3["Visualise: Density plots"]
+    S --> T1["Metrics: CV (0.876→0.206),<br/>rMAD (67.98→14.28), rSD"]
+    S --> T2["Normality tests:<br/>Shapiro-Wilk, Anderson-Darling"]
+    S --> T3["Visualise: Density plots, MA-transform"]
     
-    T1 --> U["Variable Selection"]
+    T1 --> U["Variable Selection:<br/>asinh transformation selected"]
     T2 --> U
     T3 --> U
     
-    U --> V["Exclude variables with rMAD > 30%"]
+    U --> V["Exclude variables with rMAD > 30%<br/>(241 variables removed, 9.75%)"]
     
-    V --> W["End: Clean Data"]
+    V --> W["Clean Dataset: 2,471 features<br/>Ready for PLS-DA selection"]
+    
+    W --> X["PLS-DA Feature Selection<br/>VIP > 1.0 threshold"]
+    
+    X --> Y["Final High-Confidence Dataset<br/>964 features for network analysis"]
 
-    %% Style definitions - different shades of green based on hierarchy
-    classDef mainDecision fill:#5d9b7e,stroke:#000,stroke-width:1.5px,shape:diamond,color:black,font-size:16px
-    classDef process fill:#a8e6cf,stroke:#000,stroke-width:1px,color:black,font-size:14px
-    classDef evaluateProcess fill:#97d1bc,stroke:#000,stroke-width:1px,color:black,font-size:14px
-    classDef methodProcess fill:#c3eadc,stroke:#000,stroke-width:1px,color:black,font-size:14px
+    %% Style definitions
+    classDef startEnd fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:white,font-weight:bold
+    classDef mainProcess fill:#4caf50,stroke:#2e7d32,stroke-width:1.5px,color:white
+    classDef evaluation fill:#66bb6a,stroke:#2e7d32,stroke-width:1px,color:black
+    classDef method fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px,color:black
+    classDef decision fill:#81c784,stroke:#2e7d32,stroke-width:1.5px,color:black
     
     %% Apply styles
-    class A,F,K,Q,U mainDecision
-    class B,C,D,E,J,O,P,V,W process
-    class H,M,S evaluateProcess
-    class G1,G2,I1,I2,I3,I4,L,N1,N2,N3,R,T1,T2,T3 methodProcess
+    class A,Y startEnd
+    class B,F,J,O,P,U,V,W,X mainProcess
+    class C,H,M,S evaluation
+    class G1,G2,I1,I2,I3,I4,L,N1,N2,N3,R,T1,T2,T3 method
+    class D,E,K,Q decision
 ```
-
 
 ## Pipeline Overview
 
-### 1️⃣ Data Preprocessing
-
-
+### 1️⃣ Enhanced Data Preprocessing
+**Comprehensive Quality Control Pipeline:**
+- **Missing Value Analysis**: Little's MCAR test (P = 1.0) → MAR scenario → Random Forest imputation
+- **Outlier Detection**: Isolation Forest selected for highest precision across 7 methods
+- **Transformation Optimisation**: asinh transformation reducing CV from 0.876 to 0.206
+- **Feature Refinement**: rMAD-based filtering (>30% threshold) removing 241 highly variable features
 
 ### 2️⃣ Multi-Layer Network Analysis
 Our three-layer analytical framework addresses distinct biological questions:
-- **Layer 1**: Spearman correlation networks (|r| > 0.7, FDR < 0.05) - metabolite co-regulation
-- **Layer 2**: Topology analysis (density, transitivity, modularity) - architectural principles  
-- **Layer 3**: Bayesian networks (Hill-climbing DAG) - directional dependencies
+- **Layer 1**: Spearman correlation networks (|r| > 0.7, FDR < 0.05) - metabolite co-regulation patterns
+- **Layer 2**: Topology analysis (density, transitivity, modularity, hub distribution) - architectural principles  
+- **Layer 3**: Bayesian networks (Hill-climbing DAG, 5,000 bootstrap iterations) - directional dependencies and validation
 
-### 3️⃣ Temporal Analysis
-Tracking network dynamics through:
-- Cross-tissue correlation analysis
-- Network stability assessment
-- Module preservation analysis
-- Pathway-level temporal patterns
+### 3️⃣ Advanced Temporal Analysis
+**Tracking Dynamic Network Evolution:**
+- Cross-tissue correlation progression (r = 0.546 → 0.350 in G1)
+- Strategic decoupling quantification and biphasic response identification
+- Module preservation analysis with standardised preservation statistics
+- Pathway-level temporal coherence assessment (Kendall's W coefficient)
 
-### 4️⃣ Statistical Validation Framework
-Multi-tier validation ensuring robustness:
-- **Permutation Testing**: n=1,000-10,000 iterations (optimised by analysis type)
-- **Bootstrap Validation**: n=5,000 resamples for confidence intervals
-- **Cross-Validation**: Temporal stability and module preservation
-- **Significance Threshold**: P < 0.001 across all analyses
-  
-## 🔍 Quality Metrics
-- Initial features: 4,255 (negative mode), 3,199 (positive mode)
-- Final clean dataset: 2,471 molecular features
-- Network validation: P < 0.001 (Bayesian analysis)
+### 4️⃣ Rigorous Statistical Validation Framework
+**Multi-tier validation ensuring robustness:**
+- **Bayesian Validation**: Structure learning with DAG constraints (P < 0.001)
+- **Permutation Testing**: 5,000 iterations with FDR correction
+- **Bootstrap Analysis**: n=5,000 resamples for confidence intervals  
+- **Cross-Validation**: Nested 10-fold outer, 5-fold inner for PLS-DA
+- **Effect Size Quantification**: Cliff's Delta and standardised metrics
 
-## 📚 Citation
-If you use this pipeline in your research, please cite:
-[Citation information will be added upon publication]
+## 🏆 Research Impact & Applications
+### Theoretical Contributions
+1. **Network Architecture Theory**: Established complementary tissue-specific strategies (integrated vs modular)
+2. **Temporal Control Mechanism**: Identified strategic decoupling as adaptive strategy
+3. **Validation Framework**: Comprehensive multi-layer approach for metabolic network analysis
 
-## 📝 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 🌍 Broader Context
+This work addresses critical challenges in climate-smart agriculture by providing mechanistic insights into drought tolerance. As water stress intensifies globally, understanding how tolerant genotypes organise their molecular responses becomes increasingly vital for developing resilient crop varieties.
+
+## 📧 Contact
+For questions about the methodology or collaboration opportunities, please contact:
+**Shoaib M. Mirza** – shoaibmirza2200@gmail.com
+
+## 📜 Licence & Usage
+This project is licensed under the **MIT Licence** - see [`LICENSE`](LICENSE) for details.
+
+---
+
+<div align="center">
+
+**🌾 Advancing Plant Science Through Computational Innovation 🌾**
+
+*A collaboration between Agriculture Victoria & La Trobe University*
+
+[![Agriculture Victoria](https://img.shields.io/badge/Agriculture-Victoria-green.svg)](https://agriculture.vic.gov.au/)
+[![La Trobe University](https://img.shields.io/badge/La%20Trobe-University-red.svg)](https://www.latrobe.edu.au/)
+
+*Deciphering drought tolerance through tissue-specific molecular architectures*
+
+**Empowering climate-resilient agriculture through systems biology**
+
+</div>
