@@ -1,86 +1,112 @@
+"""
+Chemical Structure Classification using SMARTS Patterns.
+
+This script classifies chemical compounds from a CSV file based on their SMILES strings.
+It uses SMARTS patterns to identify the chemical class of each compound, calculates
+a confidence score for the classification, and assigns the most likely class based
+on a predefined priority order.
+
+The script requires RDKit and pandas to be installed.
+
+Note to users: Please update the file paths in the CONFIGURATION section to match
+your local environment before running the script.
+"""
+
+import os
+from typing import Dict, List, Optional, Tuple, Union
+
 import pandas as pd
 from rdkit import Chem
-import os
 
-# File paths (you may need to update these based on your local system)
-negative_file = r'C:\Users\ms\Desktop\data_chem_3_10\output\results\rdkit\positive_matches_with_fingerprints.csv'
-output_dir = r'C:\Users\ms\Desktop\data_chem_3_10\output\results\rdkit'
+# --- CONFIGURATION ---
 
-# Load the data
-df = pd.read_csv(negative_file)
+# NOTE: The user requested to keep these hardcoded paths.
+# You will need to update these paths to match your local system setup.
+NEGATIVE_FILE_PATH = r'C:\Users\ms\Desktop\data_chem_3_10\output\results\rdkit\positive_matches_with_fingerprints.csv'
+OUTPUT_DIR = r'C:\Users\ms\Desktop\data_chem_3_10\output\results\rdkit'
 
-# Define the updated priority order based on abundance and detectability by LCMS
-priority_order = [
+# Priority order for classification, based on abundance and detectability in LCMS.
+# This list is used to resolve ties when a compound matches multiple classes
+# with the same score.
+PRIORITY_ORDER = [
     "Lipids", "Carbohydrates", "Phenolics", "Amino Acids", "Glycosides",
-    "Terpenoids", "Proteins", "Alkaloids", "Oxylipins", "Phytochelatins", 
+    "Terpenoids", "Proteins", "Alkaloids", "Oxylipins", "Phytochelatins",
     "Volatile Organic Compounds (VOCs)"
 ]
 
-# Updated SMARTS patterns for matching
-biomolecule_smarts = {
+# Manual weights for specific biomolecule groups. Higher weights give more priority
+# during the scoring process.
+GROUP_WEIGHTS = {
+    "Lipids": 1.2,
+    "Carbohydrates": 1.1,
+}
+
+# SMARTS patterns for general biomolecule classes.
+BIOMOLECULE_SMARTS = {
     "Carbohydrates": [
-        "[C@H]([OH])[C@H](O)[C@H](O)[C@H](O)[C@H](O)[CH2OH]",  # Linear sugar (e.g., glucose, fructose)
-        "[OX2H][CX4H]1[OX2][CX4H][CX4H][CX4H][CX4H]1[OX2H]",  # Cyclic sugar (e.g., monosaccharides)
-        "[C@H]([OH])[C@H](O)[C@H](O)[C@H](O)[C@H](O)[OX2H]"  # Another variation for sugars
+        "[C@H]([OH])[C@H](O)[C@H](O)[C@H](O)[C@H](O)[CH2OH]",
+        "[OX2H][CX4H]1[OX2][CX4H][CX4H][CX4H][CX4H]1[OX2H]",
+        "[C@H]([OH])[C@H](O)[C@H](O)[C@H](O)[C@H](O)[OX2H]"
     ],
     "Lipids": [
-        "[CH3][CH2][CH2][CH2][CH2][CH2][CH2][CH2]C(=O)O",  # Fatty acids with a long hydrocarbon chain and carboxyl group
-        "C(C(CO)O)O",  # Glycerolipid core
-        "[CH2][CH2][CH2][CH2][CH2][CH2][CH2][CH2][C](=O)[O]",  # Long-chain hydrocarbon with carboxyl
-        "[C](=O)[O]"  # Simple fatty acid carboxyl group
+        "[CH3][CH2][CH2][CH2][CH2][CH2][CH2][CH2]C(=O)O",
+        "C(C(CO)O)O",
+        "[CH2][CH2][CH2][CH2][CH2][CH2][CH2][CH2][C](=O)[O]",
+        "[C](=O)[O]"
     ],
     "Proteins": [
-        "[NX3][CX4H]([*])[CX3](=[OX1])[NX3H]",  # Peptide bond pattern
-        "[NX3][CX4H]([*])[CX3](=[OX1])[OX2H]",  # General amino acid backbone
-        "[#6](-[#7])-[#6](=[#8])-[#7]",  # General peptide backbone pattern
-        "[N][C][C](=O)[N]"  # Short peptide segment pattern
+        "[NX3][CX4H]([*])[CX3](=[OX1])[NX3H]",
+        "[NX3][CX4H]([*])[CX3](=[OX1])[OX2H]",
+        "[#6](-[#7])-[#6](=[#8])-[#7]",
+        "[N][C][C](=O)[N]"
     ],
     "Amino Acids": [
-        "[NX3H2][CX4H]([*])[CX3](=[OX1])[OX2H]",  # General amino acid
-        "[#7][#6](-[*])[#6](=[#8])[#8]",  # General backbone of amino acids
-        "[NH2][CH](*)[C](=O)[OH]",  # Common amino acid backbone pattern
-        "N[C@@H](C(=O)O)"  # Alanine or similar simple amino acids
+        "[NX3H2][CX4H]([*])[CX3](=[OX1])[OX2H]",
+        "[#7][#6](-[*])[#6](=[#8])[#8]",
+        "[NH2][CH](*)[C](=O)[OH]",
+        "N[C@@H](C(=O)O)"
     ],
     "Phenolics": [
-        "[OX2H][cX3]1[cX3H][cX3H][cX3H][cX3H][cX3H]1",  # Phenolic hydroxyl and benzene ring
-        "[OX2H][c]1[c][c][c][c][c]1",  # Another phenol ring variation
-        "[OX2H][c]1[c][c]([OX2H])[c][c][c]1"  # Hydroxylated benzene (phenol)
+        "[OX2H][cX3]1[cX3H][cX3H][cX3H][cX3H][cX3H]1",
+        "[OX2H][c]1[c][c][c][c][c]1",
+        "[OX2H][c]1[c][c]([OX2H])[c][c][c]1"
     ],
     "Terpenoids": [
-        "[CH3][C](=[CH2])[CH2][CH2][C](=[CH2])[CH3]",  # Isoprene unit (building block of terpenoids)
-        "[C](=[CH2])[C](=[CH2])[C](=[CH2])[C](=[CH2])",  # Polyisoprene chain
-        "[C@H]1[C@H]([C@H]([C@H](C1)C)[CH2])[CH2]"  # Cyclic terpenoid core
+        "[CH3][C](=[CH2])[CH2][CH2][C](=[CH2])[CH3]",
+        "[C](=[CH2])[C](=[CH2])[C](=[CH2])[C](=[CH2])",
+        "[C@H]1[C@H]([C@H]([C@H](C1)C)[CH2])[CH2]"
     ],
     "Alkaloids": [
-        "[$([NX3H2]),$([NX3H](C)(C)),$([NX4H2+](C)(C)(C))]",  # General alkaloid structure
-        "[#7]",  # Any nitrogen-containing structure (alkaloids often contain nitrogen)
-        "[#6]~[#7]~[#6]~[#7]",  # Carbon-nitrogen backbone common in alkaloids
-        "C1CC[NH+](C1)C2=CC=CC=C2"  # Heterocyclic alkaloid example
+        "[$([NX3H2]),$([NX3H](C)(C)),$([NX4H2+](C)(C)(C))]",
+        "[#7]",
+        "[#6]~[#7]~[#6]~[#7]",
+        "C1CC[NH+](C1)C2=CC=CC=C2"
     ],
     "Glycosides": [
-        "[C,O][C,O][C,O][C,O][C,O][OX2R0,OX2R1]",  # Sugar moiety with potential glycosidic bond
-        "[#6]1[#8][#6]([#8])[#6]([#8])[#6]([#8])[#6]1[#8]",  # Cyclic sugar (glycoside linkage)
-        "[C@H]1([C@H]([C@H](O[C@H]1O)[OH])[OH])[OH]"  # Glycoside structure
+        "[C,O][C,O][C,O][C,O][C,O][OX2R0,OX2R1]",
+        "[#6]1[#8][#6]([#8])[#6]([#8])[#6]([#8])[#6]1[#8]",
+        "[C@H]1([C@H]([C@H](O[C@H]1O)[OH])[OH])[OH]"
     ],
     "Volatile Organic Compounds (VOCs)": [
-        "[#6][#6][#6]",  # Short carbon chain (volatile hydrocarbons)
-        "[C,H][C,H][C,H]",  # General small hydrocarbon chains
-        "[#6]~[#6]~[#8,#7]",  # Carbon chain with oxygen or nitrogen (volatile functional groups)
-        "[CX3H1](=O)[CX3H2]"  # Ketones or aldehydes (common VOCs)
+        "[#6][#6][#6]",
+        "[C,H][C,H][C,H]",
+        "[#6]~[#6]~[#8,#7]",
+        "[CX3H1](=O)[CX3H2]"
     ],
     "Phytochelatins": [
-        "[NX3][CX4H]([CH2]S)[CX3](=[OX1])[NX3H]",  # Cysteine-containing peptide (phytochelatin core)
-        "[NX3][CX4H]([*])[CX3](=[OX1])[NX3H]",  # General peptide bond pattern
-        "[#7][#6](-[#6]-[#16])[#6](=[#8])[#7]"  # Phytochelatin with sulfur for metal binding
+        "[NX3][CX4H]([CH2]S)[CX3](=[OX1])[NX3H]",
+        "[NX3][CX4H]([*])[CX3](=[OX1])[NX3H]",
+        "[#7][#6](-[#6]-[#16])[#6](=[#8])[#7]"
     ],
     "Oxylipins": [
-        "[CH2][CH2][CH2]C=O",  # Carbonyl-containing lipid fragment (corrected pattern)
-        "[CX4H2][CX3](=[OX1])[CX4H2][CX3H]=[CX3H]",  # Oxygenated fatty acid backbone (oxylipin)
-        "[#6]~[#6]~[#6]~[#6]~[#6](=[#8])[#8]"  # Long chain fatty acid with carboxylic group
+        "[CH2][CH2][CH2]C=O",
+        "[CX4H2][CX3](=[OX1])[CX4H2][CX3H]=[CX3H]",
+        "[#6]~[#6]~[#6]~[#6]~[#6](=[#8])[#8]"
     ]
 }
 
-reviewed_smarts = {
+# SMARTS patterns for specific, reviewed compounds.
+REVIEWED_SMARTS = {
     "Abscisic acid": "CC(=C(C(=O)O)C1=CC(=O)C(=CC1=O)C(C)C)C",
     "Brassinolids": "[#6H3]-[#6H](-[#6H3])-[#6@H](-[#6H3])-[#6@H](-[#6@@H](-[#6@@H](-[#6H3])-[#6@H]1-[#6H2]-[#6H2]-[#6@H]2-[#6@@H]3-[#6H2]-[#8]-[#6](-[#6@H]4-[#6H2]-[#6@@H](-[#6@@H](-[#6H2]-[#6@]-4(-[#6H3])-[#6@H]-3-[#6H2]-[#6H2]-[#6@]-1-2-[#6H3])-[#8H])-[#8H])=[#8])-[#8H])-[#8H]",
     "Ethylene": "C=C",
@@ -102,134 +128,192 @@ reviewed_smarts = {
     "Glucose": "C(C1C(C(C(C(O1)O)O)O)O)O",
     "Proline": "C1CC(NC1)C(=O)O",
     "Lignin": [
-        "[C]1=C[C]=C[C]=C1",  # General aromatic ring
-        "[C]1=C([O])C=C([C])C=C1",  # Guaiacyl (G) unit
-        "[C]1=C([O])C([O])=C([C])C([O])=C1",  # Syringyl (S) unit
-        "[C]1=C([O])C=C([C])C=C1"  # p-Hydroxyphenyl (H) unit
+        "[C]1=C[C]=C[C]=C1",
+        "[C]1=C([O])C=C([C])C=C1",
+        "[C]1=C([O])C([O])=C([C])C([O])=C1",
+        "[C]1=C([O])C=C([C])C=C1"
     ],
     "Malic acid": "OC(CC(O)=O)C(O)=O"
 }
 
-import pandas as pd
-from rdkit import Chem
-import os
+# --- Functions ---
 
-# Function to calculate a score based on SMARTS pattern complexity, match size, and generate confidence score
-def get_smarts_score(smiles, smarts_list):
+def load_data(file_path: str) -> pd.DataFrame:
+    """
+    Loads data from a CSV file into a pandas DataFrame.
+
+    Args:
+        file_path: The path to the CSV file.
+
+    Returns:
+        A pandas DataFrame with the loaded data.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+    """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Input file not found at: {file_path}")
+    return pd.read_csv(file_path)
+
+
+def get_smarts_score(smiles: str, smarts_pattern: Union[str, List[str]]) -> Tuple[int, int, int]:
+    """
+    Calculates a score for a SMILES string based on SMARTS patterns.
+
+    Args:
+        smiles: The SMILES string of the molecule.
+        smarts_pattern: A single SMARTS string or a list of SMARTS strings.
+
+    Returns:
+        A tuple containing the best complexity score, number of atoms matched,
+        and the confidence score from the best matching SMARTS pattern.
+    """
     mol = Chem.MolFromSmiles(smiles)
     if not mol:
-        return 0, 0, 0  # Return 0 if the molecule cannot be parsed
-    
+        return 0, 0, 0
+
+    if isinstance(smarts_pattern, str):
+        smarts_pattern = [smarts_pattern]
+
     best_complexity = 0
     best_atoms_matched = 0
-    confidence_score = 0  # Initialize confidence score
-    
-    # Ensure smarts_list is iterable (either list or single SMARTS pattern)
-    if isinstance(smarts_list, str):
-        smarts_list = [smarts_list]  # Wrap string into a list if not already a list
-    
-    # Iterate through the list of SMARTS patterns
-    for smarts in smarts_list:
+    best_confidence = 0
+
+    for smarts in smarts_pattern:
         substruct = Chem.MolFromSmarts(smarts)
-        if mol.HasSubstructMatch(substruct):
+        if substruct and mol.HasSubstructMatch(substruct):
             match = mol.GetSubstructMatch(substruct)
-            num_atoms_matched = len(match)  # Number of atoms matched in the molecule
-            complexity_score = len(smarts)  # Complexity based on the length of the SMARTS pattern
-            
-            # Confidence score formula: complexity * atoms matched (adjust this as needed)
-            current_confidence_score = complexity_score * num_atoms_matched
-            
-            # Keep track of the best match and highest confidence score
-            if current_confidence_score > confidence_score:
+            num_atoms_matched = len(match)
+            complexity_score = len(smarts)
+            confidence = complexity_score * num_atoms_matched
+
+            if confidence > best_confidence:
                 best_complexity = complexity_score
                 best_atoms_matched = num_atoms_matched
-                confidence_score = current_confidence_score
-                
-    return best_complexity, best_atoms_matched, confidence_score  # Return best scores
+                best_confidence = confidence
 
-# Function to determine the best match based on the SMARTS complexity, atom count, and return a scaled confidence score
-def best_match_smarts(smiles, biomolecule_smarts, reviewed_smarts, priority_order, group_weights=None):
-    mol = Chem.MolFromSmiles(smiles)
-    best_match = None
-    best_score = 0
-    best_atoms_matched = 0
-    best_group = None
-    best_confidence = 0  # Initialize best confidence score
-    all_confidences = []  # Track all confidence scores for scaling
-    
-    if mol:
-        # Check biomolecule_smarts (lists of patterns)
-        for group, smarts_list in biomolecule_smarts.items():
-            complexity_score, atoms_matched, confidence_score = get_smarts_score(smiles, smarts_list)
-            group_weight = group_weights.get(group, 1) if group_weights else 1
-            overall_score = (complexity_score * group_weight) + atoms_matched
-            
-            # Collect all confidence scores for scaling later
-            all_confidences.append(confidence_score)
-            
-            if overall_score > best_score:
-                best_score = overall_score
-                best_group = group
-                best_atoms_matched = atoms_matched
-                best_confidence = confidence_score
+    return best_complexity, best_atoms_matched, best_confidence
 
-        # Check reviewed_smarts (single SMARTS patterns, not a list)
-        for group, smarts in reviewed_smarts.items():
-            complexity_score, atoms_matched, confidence_score = get_smarts_score(smiles, smarts)
-            group_weight = group_weights.get(group, 1) if group_weights else 1
-            overall_score = (complexity_score * group_weight) + atoms_matched
-            
-            # Collect all confidence scores for scaling later
-            all_confidences.append(confidence_score)
-            
-            if overall_score > best_score:
-                best_score = overall_score
-                best_group = group
-                best_atoms_matched = atoms_matched
-                best_confidence = confidence_score
-    
-    # Scale the confidence score between min and max confidence across all patterns
-    if len(all_confidences) > 0:
-        min_confidence = min(all_confidences)
-        max_confidence = max(all_confidences)
-        if max_confidence != min_confidence:
-            # Continuous scaling (min-max normalization)
-            scaled_confidence = (best_confidence - min_confidence) / (max_confidence - min_confidence)
-        else:
-            # If all confidence scores are the same, return 1 (best confidence)
-            scaled_confidence = 1
-    else:
-        scaled_confidence = 0  # No match, confidence is 0
-    
-    # Apply the priority order if there are ties in scores (use first group with highest priority)
-    if best_group in priority_order:
-        return best_group, scaled_confidence  # Return best match and scaled confidence score
-    else:
-        return "Unclassified", 0  # No match, confidence is 0
 
-# Optional: Define group-specific manual weights (higher weight gives priority)
-group_weights = {
-    "Lipids": 1.2,  # Example of higher weight for Lipids
-    "Carbohydrates": 1.1  # Example of slightly higher weight for Carbohydrates
-}
+def best_match_smarts(
+    smiles: str,
+    all_smarts: Dict[str, Union[str, List[str]]],
+    priority_order: List[str],
+    group_weights: Optional[Dict[str, float]] = None
+) -> Tuple[str, float]:
+    """
+    Determines the best chemical classification for a SMILES string.
 
-# Apply this to your dataframe: looping over each group and applying get_smarts_score
-for group, smarts_list in biomolecule_smarts.items():
-    df[group] = df['SMILES'].apply(lambda x: get_smarts_score(x, smarts_list)[0])  # Store the complexity score
+    Args:
+        smiles: The SMILES string of the molecule.
+        all_smarts: A dictionary mapping group names to SMARTS patterns.
+        priority_order: A list of group names for tie-breaking.
+        group_weights: A dictionary of weights for specific groups.
 
-# For reviewed compounds, use the same approach, but handle strings and lists appropriately
-for group, smarts in reviewed_smarts.items():
-    df[group] = df['SMILES'].apply(lambda x: get_smarts_score(x, smarts)[0])  # Handle both strings and lists
+    Returns:
+        A tuple containing the best classification group and its scaled confidence score.
+    """
+    if not smiles or pd.isna(smiles):
+        return "Unclassified", 0.0
 
-# Assign priority-based classification using the best match and store the scaled confidence score
-df['Best_Classification'], df['Scaled_Confidence_Score'] = zip(*df['SMILES'].apply(
-    lambda x: best_match_smarts(x, biomolecule_smarts, reviewed_smarts, priority_order, group_weights)
-))
+    group_weights = group_weights or {}
+    all_matches = []
+    all_confidences = []
 
-# Define output file path
-output_file = os.path.join(output_dir, 'positive_matches_with_fingerprints_with_scaled_confidence.csv')
+    for group, smarts_pattern in all_smarts.items():
+        complexity, atoms_matched, confidence = get_smarts_score(smiles, smarts_pattern)
+        all_confidences.append(confidence)
 
-# Save the updated dataframe with scaled confidence scores
-df.to_csv(output_file, index=False)
+        if atoms_matched > 0:
+            weight = group_weights.get(group, 1.0)
+            score = (complexity * weight) + atoms_matched
+            all_matches.append({"group": group, "score": score, "confidence": confidence})
 
-print(f"File saved at {output_file}")
+    if not all_matches:
+        return "Unclassified", 0.0
+
+    best_score = max(match['score'] for match in all_matches)
+    top_matches = [match for match in all_matches if match['score'] == best_score]
+
+    if len(top_matches) > 1:
+        top_matches.sort(key=lambda m: priority_order.index(m['group']) if m['group'] in priority_order else float('inf'))
+
+    best_match = top_matches[0]
+    best_group = best_match['group']
+    best_confidence = best_match['confidence']
+
+    min_conf = min(all_confidences)
+    max_conf = max(all_confidences)
+
+    scaled_confidence = 0.0
+    if max_conf > min_conf:
+        scaled_confidence = (best_confidence - min_conf) / (max_conf - min_conf)
+    elif max_conf > 0:
+        scaled_confidence = 1.0
+
+    return best_group, scaled_confidence
+
+
+def classify_molecules(df: pd.DataFrame, all_smarts: Dict, priority: List, weights: Dict) -> pd.DataFrame:
+    """
+    Applies the classification to a DataFrame of molecules.
+
+    Args:
+        df: DataFrame containing a 'SMILES' column.
+        all_smarts: Combined dictionary of SMARTS patterns.
+        priority: The priority order for tie-breaking.
+        weights: Group-specific weights.
+
+    Returns:
+        The DataFrame with added 'Best_Classification' and 'Scaled_Confidence_Score' columns.
+    """
+    results = df['SMILES'].apply(lambda x: best_match_smarts(x, all_smarts, priority, weights))
+    df[['Best_Classification', 'Scaled_Confidence_Score']] = pd.DataFrame(results.tolist(), index=df.index)
+    return df
+
+
+def save_results(df: pd.DataFrame, output_dir: str, filename: str) -> str:
+    """
+    Saves the DataFrame to a CSV file.
+
+    Args:
+        df: The DataFrame to save.
+        output_dir: The directory to save the file in.
+        filename: The name of the output file.
+
+    Returns:
+        The full path to the saved file.
+    """
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, filename)
+    df.to_csv(output_path, index=False)
+    return output_path
+
+
+def main():
+    """
+    Main function to run the chemical structure classification workflow.
+    """
+    print("Starting chemical classification...")
+    try:
+        df = load_data(NEGATIVE_FILE_PATH)
+        
+        all_smarts_patterns = {**BIOMOLECULE_SMARTS, **REVIEWED_SMARTS}
+        
+        classified_df = classify_molecules(df, all_smarts_patterns, PRIORITY_ORDER, GROUP_WEIGHTS)
+        
+        output_filename = 'positive_matches_with_fingerprints_with_scaled_confidence.csv'
+        saved_path = save_results(classified_df, OUTPUT_DIR, output_filename)
+        
+        print(f"Classification complete. File saved at: {saved_path}")
+
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        print("Please ensure the file paths in the script are correct.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+
+if __name__ == "__main__":
+    main()
