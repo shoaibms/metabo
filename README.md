@@ -360,7 +360,7 @@ For questions about the methodology or collaboration opportunities, please conta
 **Shoaib M. Mirza** – shoaibmirza2200@gmail.com
 
 ## 📜 Licence & Usage
-This project is licensed under the **MIT Licence** - see [`LICENSE`](LICENSE) for details.
+This project is licensed under the **MIT Licence**.
 
 ---
 
