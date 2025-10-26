@@ -92,31 +92,31 @@ graph TD
  ├── 📂 data                          
  │
  ├── 📂 src                           
- │   ├── 📂 1_data_preprocessing    # Data pre-processing scripts
- │   │   ├── feature_filter.py       # Initial feature filtering
- │   │   ├── missing_vis.py          # Missing value visualisation
- │   │   ├── mar_test.py             # Missing at Random test
- │   │   ├── logistic_test.py        # Logistic regression test
- │   │   ├── mcar_test.py            # Missing Completely at Random test
- │   │   ├── median_impute.py        # Median imputation
- │   │   ├── rf_impute.R             # Random Forest imputation
- │   │   ├── ml_impute.py            # Machine learning imputation
- │   │   ├── impute_validate.py      # Imputation validation
- │   │   ├── impute_dist_check.py    # Distribution check after imputation
+ │   ├── 📂 1_data_preprocessing      # Data pre-processing scripts
+ │   │   ├── feature_filter.py        # Initial feature filtering
+ │   │   ├── missing_vis.py           # Missing value visualisation
+ │   │   ├── mar_test.py              # Missing at Random test
+ │   │   ├── logistic_test.py         # Logistic regression test
+ │   │   ├── mcar_test.py             # Missing Completely at Random test
+ │   │   ├── median_impute.py         # Median imputation
+ │   │   ├── rf_impute.R              # Random Forest imputation
+ │   │   ├── ml_impute.py             # Machine learning imputation
+ │   │   ├── impute_validate.py       # Imputation validation
+ │   │   ├── impute_dist_check.py     # Distribution check after imputation
  │   │   ├── isolation_forest.py      # Isolation Forest for outliers
  │   │   ├── dim_reduce_outliers.py   # Dimensionality reduction for outliers
  │   │   ├── outlier_vis.py           # Outlier visualisation
  │   │   ├── transform_data.py        # Data transformation
  │   │   ├── normality_test.py        # Normality testing
  │   │   ├── normality_vis.py         # Normality visualisation
- │   │   ├── transform_metrics.py      # Transformation metrics
- │   │   ├── transform_eval.py         # Transformation evaluation
- │   │   ├── variance_calc.py          # Variance calculation
- │   │   └── diversity_metrics.py      # Diversity metrics calculation
+ │   │   ├── transform_metrics.py     # Transformation metrics
+ │   │   ├── transform_eval.py        # Transformation evaluation
+ │   │   ├── variance_calc.py         # Variance calculation
+ │   │   └── diversity_metrics.py     # Diversity metrics calculation
  │   │
- │   ├── 📂 2_analysis                # Main analysis scripts
- │   │   ├── ini_analysis.py            # Final preprocessing
- │   │   ├── ini_analysis_summary.py    # Preprocessing summary
+ │   ├── 📂 2_wheat_analysis           # Wheat metabolomic network analysis
+ │   │   ├── ini_analysis.py          # Final preprocessing
+ │   │   ├── ini_analysis_summary.py  # Preprocessing summary
  │   │   ├── stat_tests.py            # Statistical tests
  │   │   ├── pls_tissue.py            # PLS analysis by tissue
  │   │   ├── spearman_network.py      # Spearman correlation network
@@ -126,36 +126,47 @@ graph TD
  │   │   ├── tissue_analysis.R        # Tissue-specific analysis
  │   │   └── tissue_summary.R         # Tissue analysis summary
  │   │
- │   ├── 📂 3_visualisation           # Plotting scripts
- │   │   ├── 📂 figure1              
- │   │   │   ├── network_vis.py      # Network visualisation
- │   │   │   ├── radar_plot.R        # Radar plot
- │   │   │   ├── bayesian_crosstalk.R # Bayesian network analysis
- │   │   │   ├── hub_dist.R          # Hub distribution
- │   │   │   ├── hub_decay.R         # Hub decay
- │   │   │   ├── module_org.R        # Module organisation
- │   │   │   ├── module_stability.R  # Module stability
- │   │   │   └── temporal_stability.R # Temporal stability
- │   │   │
- │   │   ├── 📂 figure2
- │   │   │   ├── tissue_temporal.R   # Tissue temporal analysis
- │   │   │   ├── temporal_corr.R     # Temporal correlation
- │   │   │   └── tissue_plot.R       # Tissue plotting
- │   │   │
- │   │   └── 📂 figure3
- │   │       └── validation_vis.R     # Validation visualisation
+ │   ├── 📂 3_arabidopsis_validation   # Cross-species validation (Arabidopsis)
+ │   │   ├── athal_validate.py        # Network validation analysis (main)
+ │   │   ├── athal_effects.py         # Effect size calculation & Fig 5 generation
+ │   │   ├── athal_explore.py         # Data exploration (supplementary)
+ │   │   └── athal_load.py            # Metabolite data loading (supplementary)
  │   │
- │   └── 📂 4_chemical_identification # Chemical ID scripts
- │       ├── hmdb_annotate.py         # HMDB annotation
- │       ├── gnps_annotate.py         # GNPS annotation
+ │   ├── 📂 4_visualisation            # Figure generation scripts
+ │   │   ├── 📂 figure1               # Tissue-specific network architecture
+ │   │   │   ├── network_vis.py       # Network visualisation (panels A-B)
+ │   │   │   ├── radar_plot.R         # Radar plot (panel C)
+ │   │   │   ├── bayesian_crosstalk.R # Bayesian network analysis (panel D)
+ │   │   │   ├── hub_dist.R           # Hub distribution (panel E)
+ │   │   │   ├── hub_decay.R          # Hub decay (panel F)
+ │   │   │   ├── module_org.R         # Module organisation (panel G)
+ │   │   │   ├── module_stability.R   # Module stability (panel H)
+ │   │   │   └── temporal_stability.R # Temporal stability (panel I)
+ │   │   │
+ │   │   ├── 📂 figure2               # Temporal dynamics and cross-tissue coordination
+ │   │   │   ├── fig_2_a_b_c_v2.R     # Temporal coordination & hub overlap (panels A-C)
+ │   │   │   └── fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
+ │   │   │
+ │   │   ├── 📂 figure3               # Network mechanisms and feature dynamics
+ │   │   │   └── fig_3_v3.R           # Complete figure 3 generation
+ │   │   │
+ │   │   ├── 📂 figure4               # Multi-level validation (wheat)
+ │   │   │   └── validation_vis.R     # Wheat network validation visualisation
+ │   │   │
+ │   │   └── 📂 figure5               # Cross-species validation (Arabidopsis)
+ │   │       └── fig_5.py             # Arabidopsis validation figure
+ │   │
+ │   └── 📂 5_chemical_identification  # Chemical annotation and classification
+ │       ├── hmdb_annotate.py         # HMDB database annotation
+ │       ├── gnps_annotate.py         # GNPS molecular networking annotation
  │       ├── struct_classify.py       # Structural classification
  │       └── func_group.py            # Functional group analysis
  │
- ├── 📂 3D_figures                    # Interactive plot
- ├── 📂 sup-fig                       # Supplementary figures
- ├── requirements.txt                  # Dependencies
- ├── environment.yaml                  # Configuration 
- └── README.md                         # Project overview
+ ├── 📂 3D_figures                     # Interactive 3D visualisations
+ ├── 📂 sup-fig                        # Supplementary figures
+ ├── requirements.txt                  # Python dependencies
+ ├── environment.yaml                  # Conda environment configuration 
+ └── README.md                         # Project overview and documentation
 ```
 
 ## 📊 Key Findings
