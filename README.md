@@ -1,4 +1,4 @@
-# 🌾 Tissue-specific Metabolomic Networks Orchestrate Osmotic Stress Adaptation in Wheat
+# 🌾 Conserved leaf–root metabolomic network asymmetry underpins divergent drought strategies
 
 *Uncovering the architectural principles of drought tolerance through integrated metabolomic-network analysis*
 
