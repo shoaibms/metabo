@@ -123,7 +123,7 @@ graph TD
  │   │   ├── 📄 variance_qc.py            # Step 6a: Variance quality control
  │   │   └── 📄 variance_filter.py        # Step 6b: High-variance feature removal
  │   │
- │   ├── 📂 2_wheat_analysis           # Wheat metabolomic network analysis
+ │   ├── 📂 2_wheat_analysis          # Wheat metabolomic network analysis
  │   │   ├── ini_analysis.py          # Final preprocessing
  │   │   ├── ini_analysis_summary.py  # Preprocessing summary
  │   │   ├── stat_tests.py            # Statistical tests
@@ -135,7 +135,7 @@ graph TD
  │   │   ├── tissue_analysis.R        # Tissue-specific analysis
  │   │   └── tissue_summary.R         # Tissue analysis summary
  │   │
- │   ├── 📂 3_arabidopsis_validation   # Cross-species validation (Arabidopsis)
+ │   ├── 📂 3_arabidopsis_validation  # Cross-species validation (Arabidopsis)
  │   │   ├── athal_validate.py        # Network validation analysis (main)
  │   │   ├── athal_effects.py         # Effect size calculation & Fig 5 generation
  │   │   ├── athal_explore.py         # Data exploration (supplementary)
@@ -165,7 +165,7 @@ graph TD
  │   │   └── 📂 figure5               # Cross-species validation (Arabidopsis)
  │   │       └── fig_5.py             # Arabidopsis validation figure
  │   │
- │   └── 📂 5_chemical_identification  # Chemical annotation and classification
+ │   └── 📂 5_chemical_identification # Chemical annotation and classification
  │       ├── hmdb_annotate.py         # HMDB database annotation
  │       ├── gnps_annotate.py         # GNPS molecular networking annotation
  │       ├── struct_classify.py       # Structural classification
