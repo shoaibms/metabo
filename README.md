@@ -92,27 +92,36 @@ graph TD
  ├── 📂 data                          
  │
  ├── 📂 src                           
- │   ├── 📂 1_data_preprocessing      # Data pre-processing scripts
- │   │   ├── feature_filter.py        # Initial feature filtering
- │   │   ├── missing_vis.py           # Missing value visualisation
- │   │   ├── mar_test.py              # Missing at Random test
- │   │   ├── logistic_test.py         # Logistic regression test
- │   │   ├── mcar_test.py             # Missing Completely at Random test
- │   │   ├── median_impute.py         # Median imputation
- │   │   ├── rf_impute.R              # Random Forest imputation
- │   │   ├── ml_impute.py             # Machine learning imputation
- │   │   ├── impute_validate.py       # Imputation validation
- │   │   ├── impute_dist_check.py     # Distribution check after imputation
- │   │   ├── isolation_forest.py      # Isolation Forest for outliers
- │   │   ├── dim_reduce_outliers.py   # Dimensionality reduction for outliers
- │   │   ├── outlier_vis.py           # Outlier visualisation
- │   │   ├── transform_data.py        # Data transformation
- │   │   ├── normality_test.py        # Normality testing
- │   │   ├── normality_vis.py         # Normality visualisation
- │   │   ├── transform_metrics.py     # Transformation metrics
- │   │   ├── transform_eval.py        # Transformation evaluation
- │   │   ├── variance_calc.py         # Variance calculation
- │   │   └── diversity_metrics.py     # Diversity metrics calculation
+ │   ├── 📂 1_data_preprocessing          # Core preprocessing pipeline
+ │   │   │
+ │   │   ├── 📄 feature_filter.py         # Step 1: Initial feature filtering
+ │   │   │
+ │   │   ├── 📄 missing_vis.py            # Step 2a: Missing value visualisation
+ │   │   ├── 📄 mcar_test.py              # Step 2b: MCAR test
+ │   │   ├── 📄 mar_test.py               # Step 2c: MAR test  
+ │   │   ├── 📄 logistic_test_analysis.py        # Step 2d: Logistic regression (MAR analysis)
+ │   │   ├── 📄 logistic_test_visualization.py   # Step 2e: Logistic results visualization
+ │   │   │
+ │   │   ├── 📄 median_impute.py          # Step 3a: Median imputation
+ │   │   ├── 📄 rf_impute.R               # Step 3b: Random Forest imputation
+ │   │   ├── 📄 ml_impute.py              # Step 3c: ML-based imputation
+ │   │   ├── 📄 impute_validate.py        # Step 3d: Imputation validation
+ │   │   ├── 📄 impute_dist_check.py      # Step 3e: Post-imputation distribution check
+ │   │   ├── 📄 diversity_metrics.py      # Step 3f: Imputation quality metrics
+ │   │   │
+ │   │   ├── 📄 isolation_forest.py       # Step 4a: Outlier detection
+ │   │   ├── 📄 dim_reduce_outliers.py    # Step 4b: Dimensionality reduction outlier detection
+ │   │   ├── 📄 outlier_vis.py            # Step 4c: Outlier visualisation
+ │   │   │
+ │   │   ├── 📄 transform_data.py         # Step 5a: Apply transformations
+ │   │   ├── 📄 normality_test.py         # Step 5b: Normality testing
+ │   │   ├── 📄 normality_vis.py          # Step 5c: Normality visualisation
+ │   │   ├── 📄 transform_eval.py         # Step 5d: Transformation evaluation (violin plots)
+ │   │   ├── 📄 transform_eval_facet.py   # Step 5e: Transformation evaluation (facet grids)
+ │   │   ├── 📄 transform_metrics.py      # Step 5f: Comprehensive transformation metrics
+ │   │   │
+ │   │   ├── 📄 variance_qc.py            # Step 6a: Variance quality control
+ │   │   └── 📄 variance_filter.py        # Step 6b: High-variance feature removal
  │   │
  │   ├── 📂 2_wheat_analysis           # Wheat metabolomic network analysis
  │   │   ├── ini_analysis.py          # Final preprocessing
