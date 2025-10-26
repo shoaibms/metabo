@@ -90,7 +90,6 @@ graph TD
 ```
 📦 Metabolomics-Analysis-Pipeline
  ├── 📂 data                          
- │
  ├── 📂 src                           
  │   ├── 📂 1_data_preprocessing          # Core preprocessing pipeline
  │   │   │
@@ -124,58 +123,59 @@ graph TD
  │   │   └── 📄 variance_filter.py        # Step 6b: High-variance feature removal
  │   │
  │   ├── 📂 2_wheat_analysis          # Wheat metabolomic network analysis
- │   │   ├── ini_analysis.py          # Final preprocessing
- │   │   ├── ini_analysis_summary.py  # Preprocessing summary
- │   │   ├── stat_tests.py            # Statistical tests
- │   │   ├── pls_tissue.py            # PLS analysis by tissue
- │   │   ├── spearman_network.py      # Spearman correlation network
- │   │   ├── network_decay.py         # Network decay analysis
- │   │   ├── network_summary.py       # Network summary
- │   │   ├── baysian_network.R        # Bayesian network analysis
- │   │   ├── tissue_analysis.R        # Tissue-specific analysis
- │   │   └── tissue_summary.R         # Tissue analysis summary
+ │   │   ├── 📄 ini_analysis.py          # Final preprocessing
+ │   │   ├── 📄 ini_analysis_summary.py  # Preprocessing summary
+ │   │   ├── 📄 stat_tests.py            # Statistical tests
+ │   │   ├── 📄 pls_tissue.py            # PLS analysis by tissue
+ │   │   ├── 📄 spearman_network.py      # Spearman correlation network
+ │   │   ├── 📄 network_decay.py         # Network decay analysis
+ │   │   ├── 📄 network_summary.py       # Network summary
+ │   │   ├── 📄 baysian_network.R        # Bayesian network analysis
+ │   │   ├── 📄 tissue_analysis.R        # Tissue-specific analysis
+ │   │   └── 📄 tissue_summary.R         # Tissue analysis summary
  │   │
  │   ├── 📂 3_arabidopsis_validation  # Cross-species validation (Arabidopsis)
- │   │   ├── athal_validate.py        # Network validation analysis (main)
- │   │   ├── athal_effects.py         # Effect size calculation & Fig 5 generation
- │   │   ├── athal_explore.py         # Data exploration (supplementary)
- │   │   └── athal_load.py            # Metabolite data loading (supplementary)
+ │   │   ├── 📄 athal_validate.py        # Network validation analysis (main)
+ │   │   ├── 📄 athal_effects.py         # Effect size calculation & Fig 5 generation
+ │   │   ├── 📄 athal_explore.py         # Data exploration (supplementary)
+ │   │   └── 📄 athal_load.py            # Metabolite data loading (supplementary)
  │   │
  │   ├── 📂 4_visualisation            # Figure generation scripts
  │   │   ├── 📂 figure1               # Tissue-specific network architecture
- │   │   │   ├── network_vis.py       # Network visualisation (panels A-B)
- │   │   │   ├── radar_plot.R         # Radar plot (panel C)
- │   │   │   ├── bayesian_crosstalk.R # Bayesian network analysis (panel D)
- │   │   │   ├── hub_dist.R           # Hub distribution (panel E)
- │   │   │   ├── hub_decay.R          # Hub decay (panel F)
- │   │   │   ├── module_org.R         # Module organisation (panel G)
- │   │   │   ├── module_stability.R   # Module stability (panel H)
- │   │   │   └── temporal_stability.R # Temporal stability (panel I)
+ │   │   │   ├── 📄 network_vis.py       # Network visualisation (panels A-B)
+ │   │   │   ├── 📄 radar_plot.R         # Radar plot (panel C)
+ │   │   │   ├── 📄 bayesian_crosstalk.R # Bayesian network analysis (panel D)
+ │   │   │   ├── 📄 hub_dist.R           # Hub distribution (panel E)
+ │   │   │   ├── 📄 hub_decay.R          # Hub decay (panel F)
+ │   │   │   ├── 📄 module_org.R         # Module organisation (panel G)
+ │   │   │   ├── 📄 module_stability.R   # Module stability (panel H)
+ │   │   │   └── 📄 temporal_stability.R # Temporal stability (panel I)
  │   │   │
  │   │   ├── 📂 figure2               # Temporal dynamics and cross-tissue coordination
- │   │   │   ├── fig_2_a_b_c_v2.R     # Temporal coordination & hub overlap (panels A-C)
- │   │   │   └── fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
+ │   │   │   ├── 📄 fig_2_a_b_c_v2.R     # Temporal coordination & hub overlap (panels A-C)
+ │   │   │   └── 📄 fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
  │   │   │
  │   │   ├── 📂 figure3               # Network mechanisms and feature dynamics
- │   │   │   └── fig_3_v3.R           # Complete figure 3 generation
+ │   │   │   └── 📄 fig_3_v3.R           # Complete figure 3 generation
  │   │   │
  │   │   ├── 📂 figure4               # Multi-level validation (wheat)
- │   │   │   └── validation_vis.R     # Wheat network validation visualisation
+ │   │   │   └── 📄 validation_vis.R     # Wheat network validation visualisation
  │   │   │
  │   │   └── 📂 figure5               # Cross-species validation (Arabidopsis)
- │   │       └── fig_5.py             # Arabidopsis validation figure
+ │   │       └── 📄 fig_5.py             # Arabidopsis validation figure
  │   │
  │   └── 📂 5_chemical_identification # Chemical annotation and classification
- │       ├── hmdb_annotate.py         # HMDB database annotation
- │       ├── gnps_annotate.py         # GNPS molecular networking annotation
- │       ├── struct_classify.py       # Structural classification
- │       └── func_group.py            # Functional group analysis
+ │       ├── 📄 hmdb_annotate.py         # HMDB database annotation
+ │       ├── 📄 gnps_annotate.py         # GNPS molecular networking annotation
+ │       ├── 📄 struct_classify.py       # Structural classification
+ │       └── 📄 func_group.py            # Functional group analysis
  │
  ├── 📂 3D_figures                     # Interactive 3D visualisations
  ├── 📂 sup-fig                        # Supplementary figures
- ├── requirements.txt                  # Python dependencies
- ├── environment.yaml                  # Conda environment configuration 
- └── README.md                         # Project overview and documentation
+ ├── 📄 requirements.txt               # Python dependencies
+ ├── 📄 environment.yaml               # Conda environment configuration 
+ └── 📄 README.md                      # Project overview and documentation
+
 ```
 
 ## 📊 Key Findings
