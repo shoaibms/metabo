@@ -11,7 +11,7 @@ Using well-characterised contrasting wheat genotypes **G1 (Gladius, drought-tole
 - **Fundamental tissue-specific network asymmetry**: Leaves maintain ~40% denser networks (0.354 vs 0.192) with elevated transitivity, whilst roots deploy fragmented, modular architectures
 - **Strategic temporal decoupling**: Initial strong cross-tissue coordination (r ≈ 0.546) transitions to strategic independence (r ≈ 0.350) under prolonged stress
 - **Biphasic adaptation strategy**: Coordinated initial responses followed by tissue-specific specialisation, unique to drought-tolerant genotypes
-- **Rigorous statistical validation**: All findings validated through comprehensive Bayesian network analysis (P < 0.001) and permutation testing
+- **Rigorous statistical robustness**: All findings confirmed through Bayesian sensitivity analysis (P < 0.001 across all constraint levels) and permutation testing
 
 ### Workflow Overview
 ```mermaid
@@ -28,23 +28,23 @@ graph TD
     subgraph AnalysisLayers ["Network Analysis Layers"]
         E["LAYER 1: Correlation Networks<br/>Spearman |r| > 0.7, FDR < 0.05<br/>Purpose: Establish initial metabolite associations"]
         F["LAYER 2: Topology Analysis<br/>Density, Transitivity, Modularity, Hubs<br/>Purpose: Quantify network architecture"]
-        G["LAYER 3: Bayesian Networks<br/>Structure Learning Hill-Climbing DAG<br/>Purpose: Infer potential dependencies and validate non-randomness"]
+        G["LAYER 3: Bayesian Networks<br/>Structure Learning Hill-Climbing DAG<br/>Purpose: Infer directional dependencies and confirm non-random architecture"]
     end
     
     E --> H("Integration and Interpretation")
     F --> H
     G --> H
     
-    H --> I{"VALIDATION FRAMEWORK"}
+    H --> I{"ROBUSTNESS FRAMEWORK"}
     
     I --> I1
     I --> I2
     I --> I3
 
-    subgraph ValidationAspects ["Validation Aspects"]
-        I1["Statistical Robustness<br/>Permutation Testing n=5,000<br/>Bayesian validation P < 0.001"]
+    subgraph ValidationAspects ["Robustness Aspects"]
+        I1["Statistical Robustness<br/>Permutation Testing n=5,000<br/>Bayesian robustness P < 0.001"]
         I2["Temporal Stability<br/>Cross-time point consistency<br/>Module preservation analysis"]
-        I3["Biological Significance<br/>Pathway Enrichment and Known Interactions<br/>Cross-genotype validation"]
+        I3["Biological Significance<br/>Pathway Enrichment and Known Interactions<br/>Cross-genotype confirmation"]
     end
     
     I1 --> J(("Complementary Insights<br/>Each layer provides distinct non-redundant information"))
@@ -76,7 +76,7 @@ graph TD
 ### Core Capabilities
 - Analysis of 2,471 molecular features across tissues and genotypes
 - PLS-DA feature selection (VIP > 1) identifying 964 high-confidence features
-- Comprehensive validation framework (permutation + bootstrap + Bayesian analysis)
+- Comprehensive robustness framework (permutation + bootstrap + Bayesian sensitivity analysis)
 - Advanced network topology analysis with hub distribution assessment
 - Temporal dynamics evaluation with strategic decoupling quantification
 - Multi-genotype comparative analysis framework
@@ -131,18 +131,22 @@ graph TD
  │   │   ├── 📄 network_decay.py         # Network decay analysis
  │   │   ├── 📄 network_summary.py       # Network summary
  │   │   ├── 📄 baysian_network.R        # Bayesian network analysis
+ │   │   ├── 📄 bayesian_sensitivity.R   # Parent-constraint sensitivity analysis (unconstrained / maxp=5 / maxp=3)
+ │   │   ├── 📄 bootstrap_stability.py   # Cluster bootstrap + jackknife metric stability
+ │   │   ├── 📄 anova_concordance.py     # ANOVA / non-parametric concordance check
+ │   │   ├── 📄 network_robustness.py    # Threshold & VIP sensitivity sweep
  │   │   ├── 📄 tissue_analysis.R        # Tissue-specific analysis
  │   │   └── 📄 tissue_summary.R         # Tissue analysis summary
  │   │
- │   ├── 📂 3_arabidopsis_validation  # Cross-species validation (Arabidopsis)
- │   │   ├── 📄 athal_validate.py        # Network validation analysis (main)
+ │   ├── 📂 3_arabidopsis_analysis    # Cross-species confirmation (Arabidopsis)
+ │   │   ├── 📄 athal_validate.py        # Network confirmation analysis (main)
  │   │   ├── 📄 athal_effects.py         # Effect size calculation & Fig 5 generation
  │   │   ├── 📄 athal_explore.py         # Data exploration (supplementary)
  │   │   └── 📄 athal_load.py            # Metabolite data loading (supplementary)
  │   │
  │   ├── 📂 4_visualisation            # Figure generation scripts
  │   │   ├── 📂 figure1               # Tissue-specific network architecture
- │   │   │   ├── 📄 network_vis.py       # Network visualisation (panels A-B)
+ │   │   │   ├── 📄 network_vis_redesign_v3.py  # Network visualisation (panels A-B)
  │   │   │   ├── 📄 radar_plot.R         # Radar plot (panel C)
  │   │   │   ├── 📄 bayesian_crosstalk.R # Bayesian network analysis (panel D)
  │   │   │   ├── 📄 hub_dist.R           # Hub distribution (panel E)
@@ -156,13 +160,18 @@ graph TD
  │   │   │   └── 📄 fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
  │   │   │
  │   │   ├── 📂 figure3               # Network mechanisms and feature dynamics
- │   │   │   └── 📄 fig_3_v3.R           # Complete figure 3 generation
+ │   │   │   └── 📄 fig_3_v3_redesigned_v2.R    # Complete figure 3 generation
  │   │   │
- │   │   ├── 📂 figure4               # Multi-level validation (wheat)
- │   │   │   └── 📄 validation_vis.R     # Wheat network validation visualisation
+ │   │   ├── 📂 figure4               # Multi-level robustness analysis (wheat)
+ │   │   │   └── 📄 validation_vis.R     # Wheat network robustness visualisation
  │   │   │
- │   │   └── 📂 figure5               # Cross-species validation (Arabidopsis)
- │   │       └── 📄 fig_5.py             # Arabidopsis validation figure
+ │   │   ├── 📂 figure5               # Cross-species confirmation (Arabidopsis)
+ │   │   │   └── 📄 fig_5.py             # Arabidopsis confirmation figure
+ │   │   │
+ │   │   └── 📂 supplementary         # Supplementary figure generation scripts
+ │   │       ├── 📄 figure_s8_network_robustness.py      # Supp Fig S8 — threshold invariance panels
+ │   │       ├── 📄 figure_s9_statistical_robustness.py  # Supp Fig S9 — bootstrap stability panels
+ │   │       └── 📄 figure_s10_bayesian_sensitivity.py   # Supp Fig S10 — Bayesian constraint sensitivity
  │   │
  │   └── 📂 5_chemical_identification # Chemical annotation and classification
  │       ├── 📄 hmdb_annotate.py         # HMDB database annotation
@@ -196,7 +205,7 @@ graph TD
 | **Prolonged Stress** | r ≈ 0.350 | Strategic tissue-specific specialisation |
 | **G2 (Susceptible)** | r ≈ 0.236-0.288 | Weak, unstable coordination |
 
-### Statistical Validation Results
+### Statistical Robustness Results
 - **Bayesian Network Analysis**: P < 0.001 (non-random organisation)
 - **Permutation Testing**: 5,000 iterations confirming significance
 - **Effect Sizes**: Leaves = 25.87, Roots = 18.75
@@ -215,7 +224,7 @@ graph TD
   - igraph (community detection and modularity)
   - bnlearn (Bayesian network structure learning)
 
-- **Statistical Validation**:
+- **Statistical Robustness**:
   - Permutation testing frameworks
   - Bootstrap resampling (n=5,000)
   - Cross-validation protocols
@@ -329,7 +338,7 @@ flowchart TD
 Our three-layer analytical framework addresses distinct biological questions:
 - **Layer 1**: Spearman correlation networks (|r| > 0.7, FDR < 0.05) - metabolite co-regulation patterns
 - **Layer 2**: Topology analysis (density, transitivity, modularity, hub distribution) - architectural principles  
-- **Layer 3**: Bayesian networks (Hill-climbing DAG, 5,000 bootstrap iterations) - directional dependencies and validation
+- **Layer 3**: Bayesian networks (Hill-climbing DAG, 5,000 bootstrap iterations) - directional dependencies and robustness confirmation
 
 ### 3️⃣ Advanced Temporal Analysis
 **Tracking Dynamic Network Evolution:**
@@ -338,9 +347,9 @@ Our three-layer analytical framework addresses distinct biological questions:
 - Module preservation analysis with standardised preservation statistics
 - Pathway-level temporal coherence assessment (Kendall's W coefficient)
 
-### 4️⃣ Rigorous Statistical Validation Framework
-**Multi-tier validation ensuring robustness:**
-- **Bayesian Validation**: Structure learning with DAG constraints (P < 0.001)
+### 4️⃣ Rigorous Statistical Robustness Framework
+**Multi-tier analysis ensuring result robustness:**
+- **Bayesian Robustness**: Sensitivity analysis across parent constraints (unconstrained / maxp=5 / maxp=3), all P < 0.001
 - **Permutation Testing**: 5,000 iterations with FDR correction
 - **Bootstrap Analysis**: n=5,000 resamples for confidence intervals  
 - **Cross-Validation**: Nested 10-fold outer, 5-fold inner for PLS-DA
@@ -350,7 +359,7 @@ Our three-layer analytical framework addresses distinct biological questions:
 ### Theoretical Contributions
 1. **Network Architecture Theory**: Established complementary tissue-specific strategies (integrated vs modular)
 2. **Temporal Control Mechanism**: Identified strategic decoupling as adaptive strategy
-3. **Validation Framework**: Comprehensive multi-layer approach for metabolic network analysis
+3. **Robustness Framework**: Comprehensive multi-layer approach for metabolic network analysis
 
 ## 🌍 Broader Context
 This work addresses critical challenges in climate-smart agriculture by providing mechanistic insights into drought tolerance. As water stress intensifies globally, understanding how tolerant genotypes organise their molecular responses becomes increasingly vital for developing resilient crop varieties.
