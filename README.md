@@ -9,7 +9,7 @@ This repository contains the analytical pipeline used to investigate how wheat p
 Using well-characterised contrasting wheat genotypes **G1 (Gladius, drought-tolerant)** and **G2 (DAS5_003811, drought-susceptible)**, we identified:
 
 - **Fundamental tissue-specific network asymmetry**: Leaves maintain ~40% denser networks (0.354 vs 0.192) with elevated transitivity, whilst roots deploy fragmented, modular architectures
-- **Strategic temporal decoupling**: Initial strong cross-tissue coordination (r ≈ 0.546) transitions to strategic independence (r ≈ 0.350) under prolonged stress
+- **Strategic temporal decoupling**: Initial strong cross-tissue coordination (ρ ≈ 0.546) transitions to strategic independence (ρ ≈ 0.350) under prolonged stress
 - **Biphasic adaptation strategy**: Coordinated initial responses followed by tissue-specific specialisation, unique to drought-tolerant genotypes
 - **Rigorous statistical robustness**: All findings confirmed through Bayesian sensitivity analysis (P < 0.001 across all constraint levels) and permutation testing
 
@@ -26,7 +26,7 @@ graph TD
     D --> G
 
     subgraph AnalysisLayers ["Network Analysis Layers"]
-        E["LAYER 1: Correlation Networks<br/>Spearman |r| > 0.7, FDR < 0.05<br/>Purpose: Establish initial metabolite associations"]
+        E["LAYER 1: Correlation Networks<br/>Spearman |ρ| > 0.7, FDR < 0.05<br/>Purpose: Establish initial metabolite associations"]
         F["LAYER 2: Topology Analysis<br/>Density, Transitivity, Modularity, Hubs<br/>Purpose: Quantify network architecture"]
         G["LAYER 3: Bayesian Networks<br/>Structure Learning Hill-Climbing DAG<br/>Purpose: Infer directional dependencies and confirm non-random architecture"]
     end
@@ -194,20 +194,19 @@ graph TD
 | **Transitivity** | 0.740-0.804 | 0.686-0.714 | Better leaf network clustering for photosynthetic adaptation |
 | **Modularity** | 0.097-0.162 | 0.213-0.288 | Root networks more compartmentalised for localised responses |
 | **Components** | 6 | 18-21 | Roots show more independent functional modules |
-| **Hub Connectivity** | 872 connections | 767 connections | Concentrated leaf hubs vs distributed root organisation |
+| **Hub Connectivity** | Concentrated in fewer high-degree hubs | Broadly distributed across more nodes | Concentrated leaf hubs vs distributed root organisation |
 
 ### Temporal Dynamics Discovery
 | Phase | Cross-tissue Correlation | Adaptation Strategy |
 |-------|-------------------------|-------------------|
-| **Initial Response** | r ≈ 0.546 | Coordinated whole-plant adjustment |
-| **Prolonged Stress** | r ≈ 0.350 | Strategic tissue-specific specialisation |
-| **G2 (Susceptible)** | r ≈ 0.236-0.288 | Weak, unstable coordination |
+| **Initial Response** | ρ ≈ 0.546 | Coordinated whole-plant adjustment |
+| **Prolonged Stress** | ρ ≈ 0.350 | Strategic tissue-specific specialisation |
+| **G2 (Susceptible)** | ρ = 0.236–0.288 | Weak, unstable coordination |
 
 ### Statistical Robustness Results
 - **Bayesian Network Analysis**: P < 0.001 (non-random organisation)
 - **Permutation Testing**: 5,000 iterations confirming significance
-- **Effect Sizes**: Leaves = 25.87, Roots = 18.75
-- **Hub Analysis**: Kruskal-Wallis H = 702.44, P = 6.20 × 10⁻¹⁵²
+- **Effect Sizes (mean Cliff's δ)**: Leaves = 0.547, Roots = 0.396
 
 ## 🚀 Technical Stack
 
@@ -334,13 +333,13 @@ flowchart TD
 
 ### 2️⃣ Multi-Layer Network Analysis
 Our three-layer analytical framework addresses distinct biological questions:
-- **Layer 1**: Spearman correlation networks (|r| > 0.7, FDR < 0.05) - metabolite co-regulation patterns
+- **Layer 1**: Spearman correlation networks (|ρ| > 0.7, FDR < 0.05) - metabolite co-regulation patterns
 - **Layer 2**: Topology analysis (density, transitivity, modularity, hub distribution) - architectural principles  
 - **Layer 3**: Bayesian networks (Hill-climbing DAG, 5,000 bootstrap iterations) - directional dependencies and robustness confirmation
 
 ### 3️⃣ Advanced Temporal Analysis
 **Tracking Dynamic Network Evolution:**
-- Cross-tissue correlation progression (r = 0.546 → 0.350 in G1)
+- Cross-tissue correlation progression (ρ = 0.546 → 0.350 in G1)
 - Strategic decoupling quantification and biphasic response identification
 - Module preservation analysis with standardised preservation statistics
 - Pathway-level temporal coherence assessment (Kendall's W coefficient)
