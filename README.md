@@ -177,6 +177,7 @@ graph TD
  │       ├── 📄 struct_classify.py       # Structural classification
  │       └── 📄 func_group.py            # Functional group analysis
  │
+ ├── 📂 fig_png                        # Figures .png files
  ├── 📂 3D_figures                     # Interactive 3D visualisations
  ├── 📄 requirements.txt               # Python dependencies
  ├── 📄 environment.yaml               # Conda environment configuration 
