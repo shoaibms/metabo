@@ -145,33 +145,31 @@ graph TD
  │   │   └── 📄 athal_load.py            # Metabolite data loading (supplementary)
  │   │
  │   ├── 📂 4_visualisation            # Figure generation scripts
- │   │   ├── 📂 figure1               # Tissue-specific network architecture
- │   │   │   ├── 📄 network_vis_redesign_v3.py  # Network visualisation (panels A-B)
- │   │   │   ├── 📄 radar_plot.R         # Radar plot (panel C)
- │   │   │   ├── 📄 bayesian_crosstalk.R # Bayesian network analysis (panel D)
- │   │   │   ├── 📄 hub_dist.R           # Hub distribution (panel E)
- │   │   │   ├── 📄 hub_decay.R          # Hub decay (panel F)
- │   │   │   ├── 📄 module_org.R         # Module organisation (panel G)
- │   │   │   ├── 📄 module_stability.R   # Module stability (panel H)
- │   │   │   └── 📄 temporal_stability.R # Temporal stability (panel I)
+ │   │   ├── 📂 main                  # Main figure scripts
+ │   │   │   ├── 📂 figure1               # Tissue-specific network architecture
+ │   │   │   │   ├── 📄 network_vis_redesign_v3.py  # Network visualisation (panels A-B)
+ │   │   │   │   ├── 📄 radar_plot.R         # Radar plot (panel C)
+ │   │   │   │   ├── 📄 bayesian_crosstalk.R # Bayesian network analysis (panel D)
+ │   │   │   │   ├── 📄 hub_dist.R           # Hub distribution (panel E)
+ │   │   │   │   ├── 📄 hub_decay.R          # Hub decay (panel F)
+ │   │   │   │   ├── 📄 module_org.R         # Module organisation (panel G)
+ │   │   │   │   ├── 📄 module_stability.R   # Module stability (panel H)
+ │   │   │   │   └── 📄 temporal_stability.R # Temporal stability (panel I)
+ │   │   │   │
+ │   │   │   ├── 📂 figure2               # Temporal dynamics and cross-tissue coordination
+ │   │   │   │   ├── 📄 fig_2_a_b_c_v2.R     # Temporal coordination & hub overlap (panels A-C)
+ │   │   │   │   └── 📄 fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
+ │   │   │   │
+ │   │   │   ├── 📂 figure3               # Network mechanisms and feature dynamics
+ │   │   │   │   └── 📄 fig_3_v3_redesigned_v2.R    # Complete figure 3 generation
+ │   │   │   │
+ │   │   │   ├── 📂 figure4               # Multi-level robustness analysis (wheat)
+ │   │   │   │   └── 📄 validation_vis.R     # Wheat network robustness visualisation
+ │   │   │   │
+ │   │   │   └── 📂 figure5               # Cross-species confirmation (Arabidopsis)
+ │   │   │       └── 📄 fig_5.py             # Arabidopsis confirmation figure
  │   │   │
- │   │   ├── 📂 figure2               # Temporal dynamics and cross-tissue coordination
- │   │   │   ├── 📄 fig_2_a_b_c_v2.R     # Temporal coordination & hub overlap (panels A-C)
- │   │   │   └── 📄 fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
- │   │   │
- │   │   ├── 📂 figure3               # Network mechanisms and feature dynamics
- │   │   │   └── 📄 fig_3_redesigned.R    # Complete figure 3 generation
- │   │   │
- │   │   ├── 📂 figure4               # Multi-level robustness analysis (wheat)
- │   │   │   └── 📄 validation_vis.R     # Wheat network robustness visualisation
- │   │   │
- │   │   ├── 📂 figure5               # Cross-species confirmation (Arabidopsis)
- │   │   │   └── 📄 fig_5.py             # Arabidopsis confirmation figure
- │   │   │
- │   │   └── 📂 supplementary         # Supplementary figure generation scripts
- │   │       ├── 📄 figure_s8_network_robustness.py      # Supp Fig S8 — threshold invariance panels
- │   │       ├── 📄 figure_s9_statistical_robustness.py  # Supp Fig S9 — bootstrap stability panels
- │   │       └── 📄 figure_s10_bayesian_sensitivity.py   # Supp Fig S10 — Bayesian constraint sensitivity
+ │   │   └── 📂 sup                   # Supplementary figure scripts
  │   │
  │   └── 📂 5_chemical_identification # Chemical annotation and classification
  │       ├── 📄 hmdb_annotate.py         # HMDB database annotation
@@ -180,7 +178,6 @@ graph TD
  │       └── 📄 func_group.py            # Functional group analysis
  │
  ├── 📂 3D_figures                     # Interactive 3D visualisations
- ├── 📂 sup-fig                        # Supplementary figures
  ├── 📄 requirements.txt               # Python dependencies
  ├── 📄 environment.yaml               # Conda environment configuration 
  └── 📄 README.md                      # Project overview and documentation
