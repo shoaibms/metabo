@@ -1,17 +1,26 @@
-# 🌾 Conserved leaf–root metabolomic network asymmetry underpins divergent drought strategies
+# Conserved leaf–root metabolomic network asymmetry underpins divergent drought strategies
 
-*Uncovering the architectural principles of drought tolerance through integrated metabolomic-network analysis*
+*Code, workflows, and figure-generation scripts supporting integrated LC–MS metabolomics and network analysis of osmotic stress responses in wheat, with supportive cross-species analysis in Arabidopsis.*
 
-## 🎯 Project Overview
-This repository contains the analytical pipeline used to investigate how wheat plants adapt to drought stress through tissue-specific metabolic networks. Our study reveals that drought-tolerant wheat varieties maintain distinct molecular organisations in leaves versus roots - leaves show highly integrated networks optimised for rapid photosynthetic responses, whilst roots display modular networks suited for localised environmental adaptation. These architectural differences help explain how some wheat varieties better withstand drought conditions.
+## Project Overview
 
-### Key Discoveries
-Using well-characterised contrasting wheat genotypes **G1 (Gladius, drought-tolerant)** and **G2 (DAS5_003811, drought-susceptible)**, we identified:
+This repository contains the analytical pipeline used in the manuscript **"Conserved leaf–root metabolomic network asymmetry underpins divergent drought strategies."** It integrates LC–MS preprocessing, feature selection, correlation-network construction, topology analysis, robustness testing, Bayesian structure learning, temporal analysis, and figure generation.
 
-- **Fundamental tissue-specific network asymmetry**: Leaves maintain ~40% denser networks (0.354 vs 0.192) with elevated transitivity, whilst roots deploy fragmented, modular architectures
-- **Strategic temporal decoupling**: Initial strong cross-tissue coordination (ρ ≈ 0.546) transitions to strategic independence (ρ ≈ 0.350) under prolonged stress
-- **Biphasic adaptation strategy**: Coordinated initial responses followed by tissue-specific specialisation, unique to drought-tolerant genotypes
-- **Rigorous statistical robustness**: All findings confirmed through Bayesian sensitivity analysis (P < 0.001 across all constraint levels) and permutation testing
+In the primary wheat dataset, the analysis identifies a reproducible architectural asymmetry under controlled osmotic stress: leaf networks are denser and more integrated, whereas root networks are more modular and fragmented. Temporal analysis further indicates stronger early cross-tissue coordination followed by reduced coordination under prolonged stress in the drought-tolerant genotype. Bayesian structure learning is used as a complementary modelling layer that provides convergent evidence for non-random conditional-dependency structure under directed acyclic graph assumptions; it is not interpreted as causal proof.
+
+## Scope and Interpretation
+
+- The primary wheat analysis focuses on **two contrasting genotypes**: **G1 (Gladius; drought-tolerant)** and **G2 (DAS5_003811; drought-susceptible)**.
+- All wheat experiments were performed under **controlled hydroponic osmotic stress**, which enabled tightly synchronised stress onset and rapid, low-contamination root harvest for time-resolved network reconstruction.
+- The Arabidopsis component is included as **supportive cross-species evidence for scaffold detectability**, using an engineered brassinosteroid-signalling line (**35S:BRL3-GFP**), rather than as population-level confirmation of the wheat time-series analysis.
+- Translation of these network-derived traits to **field drought** remains an important next step.
+
+## Key Results
+
+- **Tissue-specific network asymmetry:** In G1, leaves show denser and more integrated networks (density 0.354 vs. 0.192), whereas roots show stronger modularity and fragmentation.
+- **Temporal reorganisation:** Cross-tissue coordination is stronger early in stress (ρ ≈ 0.546) and declines over time (ρ ≈ 0.350) in the tolerant genotype.
+- **Robustness across analysis choices:** Core conclusions are preserved across threshold sensitivity analyses, VIP sensitivity analyses, bootstrap-based stability analyses, and Bayesian max-parent sensitivity analyses.
+- **Scaffold detectability across systems:** The Arabidopsis analysis supports the detectability of a conserved leaf–root architectural scaffold, while indicating that allocation within that scaffold can be altered by signalling context.
 
 ### Workflow Overview
 ```mermaid
@@ -74,17 +83,19 @@ graph TD
 ```
 
 ### Core Capabilities
-- Analysis of 2,471 molecular features across tissues and genotypes
-- PLS-DA feature selection (VIP > 1) identifying 964 high-confidence features
-- Comprehensive robustness framework (permutation + bootstrap + Bayesian sensitivity analysis)
-- Advanced network topology analysis with hub distribution assessment
-- Temporal dynamics evaluation with strategic decoupling quantification
-- Multi-genotype comparative analysis framework
 
-## 🔑 Keywords
+- Analysis of **2,471 molecular features** across tissues and genotypes
+- PLS-DA feature selection (**VIP > 1**) identifying **964 high-confidence features**
+- Correlation-network and topology analysis across tissues and time points
+- Bayesian structure learning with parent-constraint sensitivity analysis
+- Temporal coordination, module preservation, and pathway-level coherence analysis
+- Figure-generation scripts for main and supplementary outputs
+
+## Keywords
+
 `metabolomics` `network-analysis` `drought-tolerance` `wheat` `systems-biology` `temporal-dynamics` `tissue-specific-metabolism` `LC-MS` `bioinformatics` `plant-science` `osmotic-stress` `metabolic-networks` `Bayesian-networks`
 
-## 🏗️ System Architecture
+## System Architecture
 
 ### Analysis Pipeline Structure
 ```
@@ -185,63 +196,82 @@ graph TD
 
 ```
 
-## 📊 Key Findings
+## Key Findings
 
 ### Network Architecture Comparison
-| Network Property | Leaves (G1) | Roots (G1) | Biological Significance |
-|-----------------|-------------|------------|------------------------|
-| **Network Density** | 0.354 | 0.192 | Higher leaf density enables rapid stress response coordination |
-| **Transitivity** | 0.740-0.804 | 0.686-0.714 | Better leaf network clustering for photosynthetic adaptation |
-| **Modularity** | 0.097-0.162 | 0.213-0.288 | Root networks more compartmentalised for localised responses |
-| **Components** | 6 | 18-21 | Roots show more independent functional modules |
-| **Hub Connectivity** | Concentrated in fewer high-degree hubs | Broadly distributed across more nodes | Concentrated leaf hubs vs distributed root organisation |
 
-### Temporal Dynamics Discovery
-| Phase | Cross-tissue Correlation | Adaptation Strategy |
-|-------|-------------------------|-------------------|
-| **Initial Response** | ρ ≈ 0.546 | Coordinated whole-plant adjustment |
-| **Prolonged Stress** | ρ ≈ 0.350 | Strategic tissue-specific specialisation |
-| **G2 (Susceptible)** | ρ = 0.236–0.288 | Weak, unstable coordination |
+| Network Property | Leaves (G1) | Roots (G1) | Interpretation |
+|------------------|-------------|------------|----------------|
+| **Network Density** | 0.354 | 0.192 | Higher leaf density is consistent with stronger global integration |
+| **Transitivity** | 0.740–0.804 | 0.686–0.714 | Leaves show stronger clustering of metabolite relationships |
+| **Modularity** | 0.097–0.162 | 0.213–0.288 | Roots show stronger compartmentalisation into modules |
+| **Components** | 6 | 18–21 | Roots contain more disconnected subnetworks |
+| **Hub Connectivity** | Concentrated in fewer high-degree hubs | Distributed across more nodes | Leaves favour concentrated integration; roots favour broader distribution |
 
-### Statistical Robustness Results
-- **Bayesian Network Analysis**: P < 0.001 (non-random organisation)
-- **Permutation Testing**: 5,000 iterations confirming significance
-- **Effect Sizes (mean Cliff's δ)**: Leaves = 0.547, Roots = 0.396
+### Temporal Dynamics
 
-## 🚀 Technical Stack
+| Phase | Cross-tissue Correlation | Interpretation |
+|-------|--------------------------|----------------|
+| **Initial response (G1)** | ρ ≈ 0.546 | Stronger leaf–root coordination early in stress |
+| **Prolonged stress (G1)** | ρ ≈ 0.350 | Reduced coordination with stronger tissue specialisation |
+| **G2 (susceptible)** | ρ = 0.236–0.288 | Weaker and less stable cross-tissue coordination |
 
-### Core Analysis Pipeline
-- **Data Processing**: 
-  - Pandas/NumPy (data manipulation)
-  - scikit-learn (PLS-DA, machine learning)
-  - RDKit (chemical analysis)
-  
-- **Network Analysis**:
-  - NetworkX (network construction and metrics)
-  - igraph (community detection and modularity)
-  - bnlearn (Bayesian network structure learning)
+### Robustness Summary
 
-- **Statistical Robustness**:
-  - Permutation testing frameworks
-  - Bootstrap resampling (n=5,000)
-  - Cross-validation protocols
+- **Bayesian structure learning:** observed arc counts remain far above the permuted-data null under unconstrained, `maxp = 5`, and `maxp = 3` analyses (**P < 0.001** throughout).
+- **Constraint sensitivity:** constrained Bayesian networks preserve the leaf–root ordering and retain **88.6–92.7%** overlap with the unconstrained scaffold.
+- **Permutation testing:** network and effect-size analyses were benchmarked with permutation-based inference and FDR control.
+- **Bootstrap-based analyses:** confidence intervals and stability assessments were computed for key summaries.
+- **Threshold and feature-selection sensitivity:** core architectural conclusions were stable to reasonable changes in correlation thresholds and VIP cut-offs.
 
-- **Visualisation**:
-  - Matplotlib/Seaborn (static plots)
-  - ggplot2 (publication-quality figures)
-  - Plotly (interactive 3D networks)
+## Technical Stack
 
-## 🛠️ Installation & Setup
+### Core Analysis Components
+
+- **Data processing**
+  - Pandas / NumPy
+  - scikit-learn
+  - RDKit
+
+- **Network analysis**
+  - NetworkX
+  - igraph
+  - bnlearn
+
+- **Statistical analysis**
+  - Non-parametric testing
+  - Permutation frameworks
+  - Bootstrap resampling
+  - Cross-validation
+
+- **Visualisation**
+  - Matplotlib / Seaborn
+  - ggplot2
+  - Plotly
+
+## Installation and Setup
 
 ### Quick Start
 
-**Clone Repository**
 ```bash
 git clone https://github.com/shoaibms/metabo-net.git
 cd metabo-net
 ```
 
-# 📈 Analysis Pipeline
+Create the analysis environment using either:
+
+```bash
+conda env create -f environment.yaml
+```
+
+or
+
+```bash
+pip install -r requirements.txt
+```
+
+## Analysis Pipeline
+
 Our metabolomics data analysis pipeline consists of four major phases, with comprehensive preprocessing steps to ensure data quality and reliability.
 
 ## Detailed Data Preprocessing Workflow
@@ -324,63 +354,75 @@ flowchart TD
 
 ## Pipeline Overview
 
-### 1️⃣ Enhanced Data Preprocessing
-**Comprehensive Quality Control Pipeline:**
-- **Missing Value Analysis**: Little's MCAR test (P = 1.0) → MAR scenario → Random Forest imputation
-- **Outlier Detection**: Isolation Forest selected for highest precision across 7 methods
-- **Transformation Optimisation**: asinh transformation reducing CV from 0.876 to 0.206
-- **Feature Refinement**: rMAD-based filtering (>30% threshold) removing 241 highly variable features
+### 1. Enhanced Data Preprocessing
 
-### 2️⃣ Multi-Layer Network Analysis
-Our three-layer analytical framework addresses distinct biological questions:
-- **Layer 1**: Spearman correlation networks (|ρ| > 0.7, FDR < 0.05) - metabolite co-regulation patterns
-- **Layer 2**: Topology analysis (density, transitivity, modularity, hub distribution) - architectural principles  
-- **Layer 3**: Bayesian networks (Hill-climbing DAG, 5,000 bootstrap iterations) - directional dependencies and robustness confirmation
+**Comprehensive quality-control workflow:**
 
-### 3️⃣ Advanced Temporal Analysis
-**Tracking Dynamic Network Evolution:**
-- Cross-tissue correlation progression (ρ = 0.546 → 0.350 in G1)
-- Strategic decoupling quantification and biphasic response identification
+- Missingness was assessed statistically (Little's MCAR test, P = 1.0; MAR confirmed) and handled using a dedicated imputation-selection workflow.
+- Random Forest imputation was selected after comparison with six alternative methods (higher richness: 168 vs. 156.9).
+- Isolation Forest was selected as the preferred outlier-detection method after evaluation across seven approaches.
+- asinh transformation reduced overall variability (CV: 0.876 → 0.206) before downstream network analysis.
+- 241 high-variability features were removed using an rMAD-based filtering step (>30% threshold; 9.75% of features).
+
+### 2. Multi-layer Network Analysis
+
+This repository implements a three-layer analytical framework, with each layer addressing a different question:
+
+- **Layer 1:** Spearman correlation networks (`|ρ| > 0.7`, `FDR < 0.05`) to capture pairwise co-abundance associations.
+- **Layer 2:** Topology analysis (density, transitivity, modularity, components, hub distribution) to quantify architectural organisation.
+- **Layer 3:** Bayesian structure learning (hill-climbing DAG with bootstrap-based arc stability and parent-constraint sensitivity analysis) to characterise conditional-dependency structure under complementary modelling assumptions.
+
+### 3. Temporal Analysis
+
+- Cross-tissue correlation trajectories across time points
+- Strategic decoupling analysis in the tolerant genotype
 - Module preservation analysis with standardised preservation statistics
 - Pathway-level temporal coherence assessment (Kendall's W coefficient)
 
-### 4️⃣ Rigorous Statistical Robustness Framework
-**Multi-tier analysis ensuring result robustness:**
-- **Bayesian Robustness**: Sensitivity analysis across parent constraints (unconstrained / maxp=5 / maxp=3), all P < 0.001
-- **Permutation Testing**: 5,000 iterations with FDR correction
-- **Bootstrap Analysis**: n=5,000 resamples for confidence intervals  
-- **Cross-Validation**: Nested 10-fold outer, 5-fold inner for PLS-DA
-- **Effect Size Quantification**: Cliff's Delta and standardised metrics
+### 4. Robustness and Sensitivity Framework
 
-## 🏆 Research Impact & Applications
-### Theoretical Contributions
-1. **Network Architecture Theory**: Established complementary tissue-specific strategies (integrated vs modular)
-2. **Temporal Control Mechanism**: Identified strategic decoupling as adaptive strategy
-3. **Robustness Framework**: Comprehensive multi-layer approach for metabolic network analysis
+- Bayesian max-parent sensitivity analysis (`unconstrained`, `maxp = 5`, `maxp = 3`)
+- Permutation-based inference with multiple-testing control (5,000 iterations, FDR correction)
+- Bootstrap-based confidence intervals and stability analyses
+- Cross-validation for feature-selection workflows (nested 10-fold outer, 5-fold inner)
+- Effect-size estimation using Cliff's delta and standardised metrics
 
-## 🌍 Broader Context
-This work addresses critical challenges in climate-smart agriculture by providing mechanistic insights into drought tolerance. As water stress intensifies globally, understanding how tolerant genotypes organise their molecular responses becomes increasingly vital for developing resilient crop varieties.
+## Reproducibility
 
-## 📧 Contact
-For questions about the methodology or collaboration opportunities, please contact:
+- Environment specifications are provided in `environment.yaml` and `requirements.txt`.
+- The repository includes scripts for preprocessing, network reconstruction, robustness analyses, and figure generation.
+- All stochastic steps should be run with fixed seeds and a recorded software environment for release-ready reproducibility.
+
+## Data Availability
+
+The processed metabolomics data, analysis scripts, and figures generated during this study are publicly available in this GitHub repository. Raw LC–MS data and processed datasets are intended for deposition in **MetaboLights** and **Zenodo**, respectively, upon acceptance of the associated manuscript.
+
+## Citation
+
+If you use this repository, please cite the associated manuscript and the archived repository release.
+
+**Associated manuscript:**  
+*Conserved leaf–root metabolomic network asymmetry underpins divergent drought strategies.*
+
+*A formal journal citation and DOI will be added upon acceptance.*
+
+## Contact
+
+For repository-specific questions, please open an issue in this repository or contact the corresponding author associated with the manuscript.
+
 **Shoaib M. Mirza** – shoaibmirza2200@gmail.com
 
-## 📜 Licence & Usage
-This project is licensed under the **MIT Licence**.
+## License
+
+This project is released under the **MIT License**.
 
 ---
 
 <div align="center">
 
-**🌾 Advancing Plant Science Through Computational Innovation 🌾**
-
 *A collaboration between Agriculture Victoria & La Trobe University*
 
 [![Agriculture Victoria](https://img.shields.io/badge/Agriculture-Victoria-green.svg)](https://agriculture.vic.gov.au/)
 [![La Trobe University](https://img.shields.io/badge/La%20Trobe-University-red.svg)](https://www.latrobe.edu.au/)
-
-*Deciphering drought tolerance through tissue-specific molecular architectures*
-
-**Empowering climate-resilient agriculture through systems biology**
 
 </div>
