@@ -160,7 +160,7 @@ graph TD
  │   │   │   └── 📄 fig_2_d_e.R          # Effect size distributions & response ratios (panels D-E)
  │   │   │
  │   │   ├── 📂 figure3               # Network mechanisms and feature dynamics
- │   │   │   └── 📄 fig_3_v3_redesigned_v2.R    # Complete figure 3 generation
+ │   │   │   └── 📄 fig_3_redesigned.R    # Complete figure 3 generation
  │   │   │
  │   │   ├── 📂 figure4               # Multi-level robustness analysis (wheat)
  │   │   │   └── 📄 validation_vis.R     # Wheat network robustness visualisation
