@@ -591,10 +591,10 @@ create_panel_d <- function(mean_resp) {
     # Tissue delta annotation
     geom_text(aes(x = (Mean_RMI_Leaf + Mean_RMI_Root) / 2,
                   y = Genotype_label,
-                  label = paste0("D = ", round(abs(Mean_RMI_Root - Mean_RMI_Leaf), 0))),
+                  label = paste0("\u0394 = ", round(abs(Mean_RMI_Root - Mean_RMI_Leaf), 0))),
               vjust = 2.5, size = 4.5, fontface = "italic", color = COL_ANNOT) +
     scale_x_continuous(expand = expansion(mult = c(0.05, 0.08))) +
-    labs(x = "Mean |RMI| (a.u.)", y = NULL, tag = "D") +
+    labs(x = "Mean absolute abundance under stress (a.u.)", y = NULL, tag = "D") +
     base_theme() +
     theme(
       panel.grid.major.y = element_blank(),
